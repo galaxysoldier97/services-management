@@ -161,6 +161,19 @@ public class ServiceProcess {
         }
     }
 
+    public synchronized ServiceDTO addServiceAndActivate(AddServiceRequestDTO addServiceRequest) {
+        ServiceDTO createdService = addServiceOnSubscription(addServiceRequest);
+        Service service = serviceRepository.findById(createdService.getServiceId())
+                .orElseThrow(() -> new SvcNotFoundException(localizedMessageBuilder, SERVICE_NOT_FOUND_ID, createdService.getServiceId()));
+        setEventOnService(service, Event.activate);
+        serviceRepository.save(service);
+        if (service.getServiceCategory().equals(ACCESS)) {
+            return serviceAccessResourceAssembler.toModel((ServiceAccess) service);
+        } else {
+            return serviceComponentResourceAssembler.toModel((ServiceComponent) service);
+        }
+    }
+
     private void checkBeforeSave(Service service) {
 
         if (service instanceof ServiceAccess) {

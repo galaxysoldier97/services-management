@@ -893,6 +893,40 @@ paths:
           description: Not Found
       security:
         - OAuth2: [ ]
+  /private/auth/services/createandactivate:
+    put:
+      tags:
+        - Service API
+      summary: create and activate service
+      operationId: addServiceAndActivate
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: addServiceRequest
+          description: addServiceRequest
+          required: true
+          schema:
+            $ref: '#/definitions/AddServiceRequestDTO'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ServiceDTO'
+        '201':
+          description: Service created and activated
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal error
+      security:
+        - OAuth2: [ ]
     put:
       tags:
         - Service API

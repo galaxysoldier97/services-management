@@ -83,6 +83,14 @@ public class ServiceController {
         return serviceService.addServiceOnSubscription(addServiceRequest);
     }
 
+    @Operation(summary = "Create and activate a new service")
+    @ApiResponse(responseCode = "201", description = "Service created and activated")
+    @ApiResponse(responseCode = "500", description = "Internal error")
+    @PutMapping("/createandactivate")
+    public ServiceDTO addServiceAndActivate(@Valid @RequestBody AddServiceRequestDTO addServiceRequest) {
+        return serviceService.addServiceAndActivate(addServiceRequest);
+    }
+
     @Operation(summary = "Update an existing service")
     @ApiResponse(responseCode = "200", description = "Service updated")
     @ApiResponse(responseCode = "500", description = "Internal error")
