@@ -1,0 +1,56 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="GOSS-1245-1" author="j.lethiec">
+        <!-- Add value MOBILE to provisioning_tag.access_type -->
+        <modifyDataType tableName="provisioning_tag" columnName="access_type" newDataType="enum('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'CONNECTIVITY', 'CAS', 'BBHB', 'PREPAY', 'MOBILE')"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1245-2" author="j.lethiec">
+        <!-- Add value MOBILE to service_access.access_type -->
+        <modifyDataType tableName="service_access" columnName="access_type" newDataType="enum('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'CONNECTIVITY', 'CAS', 'BBHB', 'PREPAY', 'MOBILE')"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1245-3" author="j.lethiec">
+        <!-- Set provisioning_tag_aud.access_type as String -->
+        <modifyDataType tableName="provisioning_tag_aud" columnName="access_type" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1245-4" author="j.lethiec">
+        <!--Set service_access_aud.access_type as String -->
+        <modifyDataType tableName="service_access_aud" columnName="access_type" newDataType="varchar(20)"/>
+    </changeSet>
+    
+    <changeSet id="GOSS-1302-1" author="g.fantappie">
+        <!-- Adding value OPI to networkComponent enum-->
+        <modifyDataType tableName="activation_code" columnName="network_component" newDataType="enum('TVCAS', 'ZATTOO', 'PCRF', 'SPG', 'SCP', 'DISE', 'OLT', 'CS', 'STREAMWIDE', 'SDP', 'OPI')"/>
+    </changeSet>
+
+    <changeSet id="GI-563-1" author="g.fantappie">
+        <modifyDataType tableName="provisioning_product" columnName="action_request"
+                        newDataType="ENUM('FIRST_ACTIVATION', 'ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADDR','CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'RESUM_OPER', 'RESET_CELL', 'RETURN_ANCIL', 'CHGE_ANCIL', 'TRANSFER', 'ADD_QTY', 'DEL_QTY', 'CHGE_MSISDN')"/>
+    </changeSet>
+
+    <changeSet id="GI-563-2" author="g.fantappie">
+        <modifyDataType tableName="provisioning_product_aud" columnName="action_request"
+                        newDataType="ENUM('FIRST_ACTIVATION', 'ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADDR','CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'RESUM_OPER', 'RESET_CELL', 'RETURN_ANCIL', 'CHGE_ANCIL', 'TRANSFER', 'ADD_QTY', 'DEL_QTY', 'CHGE_MSISDN')"/>
+    </changeSet>
+
+    <changeSet id="GI-595-1" author="g.fantappie">
+        <modifyDataType tableName="activation_code" columnName="activ_code" newDataType="varchar(32)"/>
+    </changeSet>
+
+    <changeSet id="GI-595-2" author="g.fantappie">
+        <modifyDataType tableName="activation_code_aud" columnName="activ_code" newDataType="varchar(32)"/>
+    </changeSet>
+
+    <changeSet id="GI-601-1" author="j.lethiec">
+        <modifyDataType tableName="provisioning_tag" columnName="tag_code" newDataType="varchar(32)"/>
+    </changeSet>
+
+    <changeSet id="GI-601-2" author="j.lethiec">
+        <modifyDataType tableName="provisioning_tag_aud" columnName="tag_code" newDataType="varchar(32)"/>
+    </changeSet>
+</databaseChangeLog>

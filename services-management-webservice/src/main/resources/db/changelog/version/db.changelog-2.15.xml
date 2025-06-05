@@ -1,0 +1,203 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="GI-711-1" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="activation_code_aud" />
+            </not>
+        </preConditions>
+
+
+        <!-- Added primary key to activation_code_aud table -->
+        <addPrimaryKey tableName="activation_code_aud" columnNames="id, revision_id"/>
+    </changeSet>
+
+    <changeSet id="GI-711-2" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="provisioning_action_aud" />
+            </not>
+        </preConditions>
+
+
+        <!-- Added primary key to provisioning_action_aud table -->
+        <addPrimaryKey tableName="provisioning_action_aud" columnNames="id, revision_id"/>
+    </changeSet>
+
+    <changeSet id="GI-711-3" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="provisioning_action_parameter_aud" />
+            </not>
+        </preConditions>
+
+
+        <!-- Added primary key to provisioning_action_parameter_aud table -->
+        <addPrimaryKey tableName="provisioning_action_parameter_aud" columnNames="provisioning_action_id, technical_parameter_id, revision_id"/>
+    </changeSet>
+
+    <changeSet id="GI-711-4" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="provisioning_product_aud" />
+            </not>
+        </preConditions>
+
+
+        <!-- Added primary key to provisioning_product_aud table -->
+        <addPrimaryKey tableName="provisioning_product_aud" columnNames="id, revision_id"/>
+    </changeSet>
+
+    <changeSet id="GI-711-5" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="provisioning_tag_aud" />
+            </not>
+        </preConditions>
+
+
+        <!-- Added primary key to provisioning_tag_aud table -->
+        <addPrimaryKey tableName="provisioning_tag_aud" columnNames="id, revision_id"/>
+    </changeSet>
+
+    <changeSet id="GI-711-6" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="service_access_aud" />
+            </not>
+        </preConditions>
+
+
+        <!-- Added primary key to service_access_aud table -->
+        <addPrimaryKey tableName="service_access_aud" columnNames="id, revision_id"/>
+    </changeSet>
+
+    <changeSet id="GI-711-7" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="service_aud" />
+            </not>
+        </preConditions>
+
+
+        <!-- Added primary key to service_aud table -->
+        <addPrimaryKey tableName="service_aud" columnNames="id, revision_id"/>
+    </changeSet>
+
+    <changeSet id="GI-711-8" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="service_component_aud" />
+            </not>
+        </preConditions>
+
+
+        <!-- Added primary key to service_component_aud table -->
+        <addPrimaryKey tableName="service_component_aud" columnNames="id, revision_id"/>
+    </changeSet>
+
+    <changeSet id="GI-711-9" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="tag_activation_aud" />
+            </not>
+        </preConditions>
+
+
+        <!-- Added primary key to tag_activation_aud table -->
+        <addPrimaryKey tableName="tag_activation_aud" columnNames="activation_code_id, provisioning_tag_id, revision_id"/>
+    </changeSet>
+
+    <changeSet id="GI-711-10" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="technical_parameter_aud" />
+            </not>
+        </preConditions>
+
+
+        <!-- Added primary key to technical_parameter_aud table -->
+        <addPrimaryKey tableName="technical_parameter_aud" columnNames="id, revision_id"/>
+    </changeSet>
+
+    <changeSet id="GI-711-11" author="g.fantappie">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="DATABASECHANGELOG" />
+            </not>
+        </preConditions>
+
+        <!-- Added primary unique key to DATABASECHANGELOG-->
+        <addPrimaryKey tableName="DATABASECHANGELOG" columnNames="id, author, filename"/>
+    </changeSet>
+
+    <changeSet id="GI-680-1" author="g.fantappie">
+        <modifyDataType tableName="service_component" columnName="component_type"
+                        newDataType="enum('TEAMS','CAS', 'CLOUDCALLING')"/>
+    </changeSet>
+
+    <changeSet id="GI-680-2" author="g.fantappie">
+        <!--Update value CLOUDCALLING to TEAMS for aud table -->
+        <update tableName="service_component">
+            <column name="component_type" value="TEAMS"/>
+            <where>component_type='CLOUDCALLING'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="GI-680-3" author="g.fantappie">
+        <modifyDataType tableName="service_component" columnName="component_type" newDataType="enum('TEAMS','CAS')"/>
+    </changeSet>
+
+    <changeSet id="GI-719-1" author="j.lethiec">
+        <comment>Align service_aud.revision_id type</comment>
+        <modifyDataType tableName="service_aud" columnName="revision_id" newDataType="integer"/>
+    </changeSet>
+
+    <changeSet id="GI-719-2" author="j.lethiec">
+        <comment>Align service_component_aud.revision_id type</comment>
+        <modifyDataType tableName="service_component_aud" columnName="revision_id" newDataType="integer"/>
+    </changeSet>
+
+    <changeSet id="GI-719-3" author="j.lethiec">
+        <comment>Align technical_parameter_aud.revision_id type</comment>
+        <modifyDataType tableName="technical_parameter_aud" columnName="revision_id" newDataType="integer"/>
+    </changeSet>
+
+    <changeSet id="GI-713-1" author="g.fantappie">
+        <modifyDataType tableName="activation_code_aud" columnName="nature" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GI-713-2" author="g.fantappie">
+        <modifyDataType tableName="provisioning_action_aud" columnName="tag_action" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GI-713-3" author="g.fantappie">
+        <modifyDataType tableName="provisioning_action_aud" columnName="service_action" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GI-713-4" author="g.fantappie">
+        <modifyDataType tableName="service_access_aud" columnName="equipment_category" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GI-713-5" author="g.fantappie">
+        <modifyDataType tableName="service_aud" columnName="service_category" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GI-713-6" author="g.fantappie">
+        <modifyDataType tableName="service_aud" columnName="service_activity" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GI-713-7" author="g.fantappie">
+        <modifyDataType tableName="service_aud" columnName="status" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GI-713-8" author="g.fantappie">
+        <modifyDataType tableName="service_aud" columnName="action_status" newDataType="varchar(20)"/>
+    </changeSet>
+
+    <changeSet id="GI-713-9" author="g.fantappie">
+        <modifyDataType tableName="technical_parameter_aud" columnName="parameter_type" newDataType="varchar(20)"/>
+    </changeSet>
+</databaseChangeLog>

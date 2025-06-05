@@ -1,0 +1,1424 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-001">
+        <createTable tableName="activation_code">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="activ_code" type="VARCHAR(20)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="description" type="VARCHAR(40)"/>
+            <column name="nature" type="ENUM('PROFILE', 'OPTION', 'BUCKET', 'BOOSTER', 'BARRING', 'LOCK', 'FORWARDING')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="network_component" type="ENUM('TVCAS', 'ZATTOO', 'PCRF', 'SPG', 'SCP', 'DISE')">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="activation_code"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="t.suignard (generated)" id="tecrep-services-management-030">
+        <createTable tableName="activation_code_aud">
+            <column name="id" type="BIGINT"/>
+            <column name="activ_code" type="VARCHAR(20)"/>
+            <column name="description" type="VARCHAR(40)"/>
+            <column name="nature" type="ENUM('PROFILE', 'OPTION', 'BUCKET', 'BOOSTER', 'BARRING', 'LOCK', 'FORWARDING')"/>
+            <column name="network_component" type="ENUM('TVCAS', 'ZATTOO', 'PCRF', 'SPG', 'SCP', 'DISE')"/>
+            <column name="revision_id" type="INT"/>
+            <column name="revision_type" type="TINYINT(3)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="activation_code_aud"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-002">
+        <createTable tableName="audit_envers_info">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="timestamp" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="VARCHAR(255)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="audit_envers_info"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-008">
+        <createTable tableName="service">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="crm_service_id" type="VARCHAR(20)"/>
+            <column name="service_category" type="ENUM('ACCESS', 'COMPONENT')"/>
+            <column name="service_activity" type="ENUM('MOBILE', 'INTERNET', 'SIP', 'TV', 'NDD', 'MAILPRO', 'MAIL', 'WIFI', 'VOIP', 'MEVO')"/>
+            <column name="subscription_id" type="BIGINT"/>
+            <column name="number" type="VARCHAR(32)"/>
+            <column name="creation_date" type="datetime"/>
+            <column name="subscription_date" type="datetime"/>
+            <column name="activation_date" type="datetime"/>
+            <column name="billing_date" type="datetime"/>
+            <column name="deactivation_date" type="datetime"/>
+            <column name="expiration_date" type="datetime"/>
+            <column name="suspension_date" type="datetime"/>
+            <column name="resumed_date" type="datetime"/>
+            <column name="cancellation_date" type="datetime"/>
+            <column name="status" type="ENUM('DRAFT', 'PENDING', 'ACTIVATED', 'DEACTIVATED', 'SUSPENDED', 'BILLABLE', 'TERMINATED', 'CANCELED')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action_request" type="ENUM('ACTIVATION', 'SUSPENSION', 'DEACTIVATION', 'RESUMING')"/>
+            <column name="date_request" type="datetime"/>
+            <column name="action_planned" type="BIT(1)"/>
+            <column name="planned_date" type="datetime"/>
+            <column name="action_status" type="ENUM('PENDING', 'CANCELED', 'COMPLETED', 'TERMINATED')"/>
+            <column name="action_start" type="datetime"/>
+            <column name="action_end" type="datetime"/>
+            <column name="customer_no" type="BIGINT"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="service"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-003">
+        <createTable tableName="subscription">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="subscription_activity" type="ENUM('MOBILE', 'INTERNET', 'TELEPHONY', 'TV', 'ANNEXE')"/>
+            <column name="creation_date" type="datetime"/>
+            <column name="subscription_date" type="datetime"/>
+            <column name="billing_date" type="datetime"/>
+            <column name="transition_date" type="datetime"/>
+            <column name="expiration_date" type="datetime"/>
+            <column name="cancellation_date" type="datetime"/>
+            <column name="subscription_status" type="ENUM('DRAFT', 'PENDING', 'BILLED', 'TERMINATED', 'CANCELED')"/>
+            <column name="customer_no" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="master_service_id" type="BIGINT"/>
+            <column name="action_request" type="ENUM('BILLING', 'TRANSITION', 'TERMINATION')"/>
+            <column name="date_request" type="datetime"/>
+            <column name="action_status" type="ENUM('PENDING', 'CANCELED', 'TERMINATED')"/>
+            <column name="action_start" type="datetime"/>
+            <column name="action_end" type="datetime"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="subscription"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-004">
+        <createTable tableName="subscription_aud">
+            <column name="id" type="BIGINT"/>
+            <column name="revision_id" type="INT"/>
+            <column name="revision_type" type="TINYINT(3)"/>
+            <column name="subscription_activity" type="ENUM('MOBILE', 'INTERNET', 'TELEPHONY', 'TV', 'ANNEXE')"/>
+            <column name="creation_date" type="datetime"/>
+            <column name="subscription_date" type="datetime"/>
+            <column name="billing_date" type="datetime"/>
+            <column name="transition_date" type="datetime"/>
+            <column name="expiration_date" type="datetime"/>
+            <column name="cancellation_date" type="datetime"/>
+            <column name="subscription_status" type="ENUM('DRAFT', 'PENDING', 'BILLED', 'TERMINATED', 'CANCELED')"/>
+            <column name="customer_no" type="BIGINT"/>
+            <column name="master_service_id" type="BIGINT"/>
+            <column name="action_request" type="ENUM('BILLING', 'TRANSITION', 'TERMINATION')"/>
+            <column name="date_request" type="datetime"/>
+            <column name="action_status" type="ENUM('PENDING', 'CANCELED', 'TERMINATED')"/>
+            <column name="action_start" type="datetime"/>
+            <column name="action_end" type="datetime"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="subscription_aud"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-026">
+        <createTable tableName="product">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="product_code" type="VARCHAR(20)">
+                <constraints unique="true"/>
+            </column>
+            <column name="product_type" type="ENUM('OFFER', 'COMMERCIALOPTION', 'TECHNICALOPTION')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_level" type="ENUM('ACCOUNT','SUBSCRIPTION', 'SERVICE')"/>
+            <column name="tag_code" type="VARCHAR(20)"/>
+            <column name="parent_product_id" type="BIGINT"/>
+            <column name="persistent" type="BIT(1)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="product"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-027">
+        <createTable tableName="product_aud">
+            <column name="id" type="BIGINT"/>
+            <column name="product_code" type="VARCHAR(20)"/>
+            <column name="product_type" type="ENUM('OFFER', 'COMMERCIALOPTION', 'TECHNICALOPTION')"/>
+            <column name="product_level" type="ENUM('ACCOUNT','SUBSCRIPTION', 'SERVICE')"/>
+            <column name="tag_code" type="VARCHAR(20)"/>
+            <column name="parent_product_id" type="BIGINT"/>
+            <column name="persistent" type="BIT(1)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="product_aud"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-005">
+        <createTable tableName="purchased_products">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_purchased_products_product_id" references="product(id)"/>
+            </column>
+            <column name="subscription_id" type="BIGINT">
+                <constraints nullable="true" foreignKeyName="fk_purchased_products_subscription_id" references="subscription(id)"/>
+            </column>
+            <column name="service_id" type="BIGINT">
+                <constraints nullable="true" foreignKeyName="fk_purchased_products_service_id" references="service(id)"/>
+            </column>
+            <column name="creation_date" type="datetime"/>
+            <column name="subscription_date" type="datetime"/>
+            <column name="activation_date" type="datetime"/>
+            <column name="billing_date" type="datetime"/>
+            <column name="deactivation_date" type="datetime"/>
+            <column name="expiration_date" type="datetime"/>
+            <column name="cancellation_date" type="datetime"/>
+            <column name="quantity" type="BIGINT"/>
+            <column name="status" type="ENUM('DRAFT', 'PENDING', 'ACTIVATED', 'BILLABLE', 'DEACTIVATED', 'TERMINATED', 'CANCELED')"/>
+            <column name="action_request" type="ENUM('ACTIVATION', 'DEACTIVATION')"/>
+            <column name="date_request" type="datetime"/>
+            <column name="action_planned" type="BIT(1)"/>
+            <column name="planned_date" type="datetime"/>
+            <column name="action_status" type="ENUM('PENDING', 'CANCELED', 'COMPLETED', 'TERMINATED')"/>
+            <column name="action_start" type="datetime"/>
+            <column name="action_end" type="datetime"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="purchased_products"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-006">
+        <createTable tableName="purchased_products_aud">
+            <column name="id" type="BIGINT"/>
+            <column name="revision_id" type="BIGINT"/>
+            <column name="revision_type" type="TINYINT(3)"/>
+            <column name="product_id" type="BIGINT"/>
+            <column name="subscription_id" type="BIGINT"/>
+            <column name="service_id" type="BIGINT"/>
+            <column name="creation_date" type="datetime"/>
+            <column name="subscription_date" type="datetime"/>
+            <column name="activation_date" type="datetime"/>
+            <column name="billing_date" type="datetime"/>
+            <column name="deactivation_date" type="datetime"/>
+            <column name="expiration_date" type="datetime"/>
+            <column name="cancellation_date" type="datetime"/>
+            <column name="quantity" type="BIGINT"/>
+            <column name="status" type="ENUM('DRAFT', 'PENDING', 'ACTIVATED', 'BILLABLE', 'DEACTIVATED', 'TERMINATED', 'CANCELED')"/>
+            <column name="action_request" type="ENUM('ACTIVATION', 'DEACTIVATION')"/>
+            <column name="date_request" type="datetime"/>
+            <column name="action_planned" type="BIT(1)"/>
+            <column name="planned_date" type="datetime"/>
+            <column name="action_status" type="ENUM('PENDING', 'CANCELED', 'COMPLETED', 'TERMINATED')"/>
+            <column name="action_start" type="datetime"/>
+            <column name="action_end" type="datetime"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="purchased_products_aud"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-007">
+        <createTable tableName="provisioning_tag">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="tag_code" type="VARCHAR(20)">
+                <constraints unique="true"/>
+            </column>
+            <column name="description" type="VARCHAR(40)"/>
+            <column name="activity" type="ENUM('MOBILE', 'INTERNET', 'VOIP', 'TV', 'MAIL', 'TRUNKSIP' , 'SIP', 'NDD','MAILPRO', 'WIFI', 'MEVO')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="ENUM('ACCESS','COMPONENT')"/>
+
+            <column name="access_type" type="ENUM('DISE', 'FREEDHOME', 'DOCSIS', 'FTTH', 'ZATTOO', 'CAS', 'CONNECTIVITY')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nature" type="ENUM('A', 'P', 'O', 'E', 'R', 'U')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="persistent" type="BIT(1)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="provisioning_tag"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="t.suignard (generated)" id="tecrep-services-management-028">
+        <createTable tableName="provisioning_tag_aud">
+            <column name="id" type="BIGINT"/>
+            <column name="tag_code" type="VARCHAR(20)"/>
+            <column name="description" type="VARCHAR(40)"/>
+            <column name="activity" type="ENUM('MOBILE', 'INTERNET', 'VOIP', 'TV', 'MAIL', 'TRUNKSIP' , 'SIP', 'NDD','MAILPRO', 'WIFI', 'MEVO')"/>
+            <column name="category" type="ENUM('ACCESS','COMPONENT')"/>
+            <column name="access_type" type="ENUM('DISE', 'FREEDHOME', 'DOCSIS', 'FTTH', 'ZATTOO', 'CAS', 'CONNECTIVITY')"/>
+            <column name="nature" type="ENUM('A', 'P', 'O', 'E', 'R', 'U')"/>
+            <column name="persistent" type="BIT(1)"/>
+            <column name="revision_type" type="TINYINT(3)"/>
+            <column name="revision_id" type="INT"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="provisioning_tag_aud"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-009">
+        <createTable tableName="service_access">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_service_access_service_id" references="service(id)"/>
+            </column>
+            <column name="parent_service_id" type="BIGINT">
+                <constraints nullable="true" foreignKeyName="fk_service_access_parent_service_id" references="service_access(id)"/>
+            </column>
+            <column name="equipment_id" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="access_point_id" type="BIGINT">
+            </column>
+            <column name="access_type" type="ENUM('DISE', 'FREEDHOME', 'DOCSIS', 'FTTH', 'ZATTOO', 'CONNECTIVITY','CAS')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tech_id" type="BIGINT">
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="service_access"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-010">
+        <createTable tableName="service_access_aud">
+            <column name="id" type="BIGINT"/>
+            <column name="revision_id" type="INT"/>
+            <column name="revision_type" type="TINYINT(3)"/>
+            <column name="parent_service_id" type="BIGINT"/>
+            <column name="equipment_id" type="BIGINT"/>
+            <column name="access_point_id" type="BIGINT">
+            </column>
+            <column name="access_type" type="ENUM('DISE', 'FREEDHOME', 'DOCSIS', 'FTTH', 'ZATTOO', 'CONNECTIVITY','CAS')"/>
+            <column name="tech_id" type="BIGINT"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="service_access_aud"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-011">
+        <createTable tableName="service_activations">
+            <column name="activ_value" type="BIGINT"/>
+            <column name="service_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_service_activations_service_id" references="service(id)"/>
+            </column>
+            <column name="activ_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_service_activations_activ_id" references="activation_code(id)"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="service_activations"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.rasolondraibe" id="tecrep-services-management-012">
+        <addUniqueConstraint
+                columnNames="service_id, activ_id"
+                constraintName="fk-uniqueconstraint-service-activations"
+                tableName="service_activations"
+        />
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-013">
+        <createTable tableName="service_aud">
+            <column name="id" type="BIGINT"/>
+            <column name="revision_id" type="BIGINT"/>
+            <column name="revision_type" type="TINYINT(3)"/>
+            <column name="crm_service_id" type="VARCHAR(20)"/>
+            <column name="service_category" type="ENUM('ACCESS', 'COMPONENT')"/>
+            <column name="service_activity" type="ENUM('MOBILE', 'INTERNET', 'SIP', 'TV', 'NDD', 'MAILPRO', 'MAIL', 'WIFI', 'VOIP', 'MEVO')"/>
+            <column name="subscription_id" type="BIGINT"/>
+            <column name="number" type="VARCHAR(255)"/>
+            <column name="creation_date" type="datetime"/>
+            <column name="subscription_date" type="datetime"/>
+            <column name="activation_date" type="datetime"/>
+            <column name="billing_date" type="datetime"/>
+            <column name="deactivation_date" type="datetime"/>
+            <column name="expiration_date" type="datetime"/>
+            <column name="suspension_date" type="datetime"/>
+            <column name="resumed_date" type="datetime"/>
+            <column name="cancellation_date" type="datetime"/>
+            <column name="status" type="ENUM('DRAFT', 'PENDING', 'ACTIVATED', 'DEACTIVATED', 'SUSPENDED', 'BILLABLE', 'TERMINATED', 'CANCELED')"/>
+            <column name="action_request" type="ENUM('ACTIVATION', 'SUSPENSION', 'RELEASING', 'DEACTIVATION', 'TERMINATION', 'RESUMING')"/>
+            <column name="date_request" type="datetime"/>
+            <column name="action_planned" type="BIT(1)"/>
+            <column name="planned_date" type="datetime"/>
+            <column name="action_status" type="ENUM('PENDING', 'CANCELED', 'COMPLETED', 'TERMINATED')"/>
+            <column name="action_start" type="datetime"/>
+            <column name="action_end" type="datetime"/>
+            <column name="customer_no" type="BIGINT"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="service_aud"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-014">
+        <createTable tableName="service_component">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_service_component_service_id" references="service(id)"/>
+            </column>
+            <column name="access_service_id" type="BIGINT">
+                <constraints nullable="true" foreignKeyName="fk_service_component_access_service_id" references="service_access(id)"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="service_component"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-015">
+        <createTable tableName="service_component_aud">
+            <column name="id" type="BIGINT"/>
+            <column name="revision_id" type="BIGINT"/>
+            <column name="revision_type" type="TINYINT(3)"/>
+            <column name="access_service_id" type="BIGINT"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="service_component_aud"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-016">
+        <createTable tableName="service_tag">
+            <column name="tag_value" type="BIGINT"/>
+            <column name="tag_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_service_tag_provisioningtag_id" references="provisioning_tag(id)"/>
+            </column>
+            <column name="service_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_service_tag_service_id" references="service(id)"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="service_tag"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.rasolondraibe" id="tecrep-services-management-017">
+        <addUniqueConstraint
+                columnNames="tag_id, service_id"
+                constraintName="fk-uniqueconstraint-service-tag"
+                tableName="service_tag"
+        />
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-018">
+        <createTable tableName="supplementary_subscription">
+            <column name="subscription_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_supplementary_subscription_subscription_id" references="subscription(id)"/>
+            </column>
+            <column name="related_subscription_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_supplementary_subscription_related_subscription_id" references="subscription(id)"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="supplementary_subscription"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-019">
+        <createTable tableName="supplementary_subscription_aud">
+            <column name="id" type="BIGINT"/>
+            <column name="revision_id" type="BIGINT"/>
+            <column name="revision_type" type="TINYINT(3)"/>
+            <column name="related_subscription_id" type="BIGINT"/>
+            <column name="subscription_id" type="BIGINT"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="supplementary_subscription_aud"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-020">
+        <createTable tableName="tag_activation">
+            <column name="tag_value" type="BIGINT"/>
+            <column name="provisioning_tag_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_tag_activation_provisioning_tag_id" references="provisioning_tag(id)"/>
+            </column>
+            <column name="activation_code_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_tag_activation_activation_code_id" references="activation_code(id)"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="tag_activation"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="t.suignard (generated)" id="tecrep-services-management-031">
+        <createTable tableName="tag_activation_aud">
+            <column name="tag_value" type="BIGINT"/>
+            <column name="provisioning_tag_id" type="BIGINT"/>
+            <column name="activation_code_id" type="BIGINT"/>
+            <column name="revision_id" type="INT"/>
+            <column name="revision_type" type="TINYINT(3)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="tag_activation_aud"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-021">
+        <createTable tableName="technical_parameter">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="description" type="VARCHAR(40)"/>
+            <column name="parameter_code" type="VARCHAR(30)">
+                <constraints unique="true"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="technical_parameter"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.chen (generated)" id="tecrep-services-management-022">
+        <createTable tableName="tag_parameter">
+            <column name="parameter_value" type="VARCHAR(80)"/>
+            <column name="provisioning_tag_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_tag_parameter_provisioning_tag_id" references="provisioning_tag(id)"/>
+            </column>
+            <column name="technical_parameter_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_tag_parameter_technical_parameter_id" references="technical_parameter(id)"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="tag_parameter"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="g.rasolondraibe@monaco-telecom.mc" id="tecrep-services-management-025">
+        <addForeignKeyConstraint baseColumnNames="subscription_id"
+                                 baseTableName="service"
+                                 constraintName="fk_service_subscription_id"
+                                 onDelete="CASCADE"
+                                 onUpdate="CASCADE"
+                                 referencedColumnNames="id"
+                                 referencedTableName="subscription"/>
+    </changeSet>
+    <changeSet author="t.suignard" id="tecrep-services-management-029">
+        <addForeignKeyConstraint baseColumnNames="parent_product_id"
+                                 baseTableName="product"
+                                 constraintName="fk_product_parent_product_id"
+                                 onDelete="CASCADE"
+                                 onUpdate="CASCADE"
+                                 referencedColumnNames="id"
+                                 referencedTableName="product"/>
+    </changeSet>
+    <changeSet  author="g.chen" id="tecrep-services-management-030">
+        <modifyDataType columnName = "nature"
+                        tableName =  "activation_code"
+                        newDataType= "ENUM('PROFILE', 'OPTION', 'BUCKET', 'BOOSTER', 'BARRING', 'LOCK', 'FORWARDING','CONFIG')"/>
+    </changeSet>
+    <changeSet  author="g.chen" id="tecrep-services-management-031">
+        <modifyDataType columnName = "nature"
+                        tableName =  "activation_code_aud"
+                        newDataType= "ENUM('PROFILE', 'OPTION', 'BUCKET', 'BOOSTER', 'BARRING', 'LOCK', 'FORWARDING','CONFIG')"/>
+    </changeSet>
+
+    <changeSet id="tecrep-services-management-033" author="g.chen">
+        <addColumn tableName="product_aud">
+            <column name="revision_id" type="INT"/>
+            <column name="revision_type" type="TINYINT(3)"/>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet author="t.suignard (generated)" id="services-management-034">
+        <createTable tableName="provisioning_action">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="tag_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_tag_id" references="provisioning_tag(id)"/>
+            </column>
+            <column name="tag_action" type="ENUM('PURCHASE', 'CANCEL', 'MIGRATION', 'TRANSITION')"/>
+            <column name="service_action" type="ENUM('ACTIVATION', 'MIGRATION', 'DEACTIVATION', 'CHGE_ADDR', 'CHGE_CUST', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPE', 'RESUM_OPE')"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="provisioning_action"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="t.suignard (generated)" id="services-management-035">
+        <createTable tableName="provisioning_action_aud">
+            <column name="id" type="BIGINT"/>
+            <column name="tag_id" type="BIGINT"/>
+            <column name="parent_tag_action_id" type="BIGINT"/>
+            <column name="tag_action" type="ENUM('PURCHASE', 'CANCEL', 'MIGRATION', 'TRANSITION')"/>
+            <column name="revision_type" type="TINYINT(3)"/>
+            <column name="revision_id" type="INT"/>
+            <column name="service_action" type="ENUM('ACTIVATION', 'MIGRATION', 'DEACTIVATION', 'CHGE_ADDR', 'CHGE_CUST', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPE', 'RESUM_OPE')"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="provisioning_action_aud"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="t.suignard (generated)" id="services-management-036">
+        <createTable tableName="provisioning_product">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="product_code" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action_request" type="ENUM('ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADDR', 'CHGE_CUST', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPE', 'RESUM_OPE')"/>
+            <column name="tag_action_id" type="BIGINT">
+                <constraints foreignKeyName="fk_provisioning_action_id" references="provisioning_action(id)"/>
+            </column>
+            <column name="parent_tag_action_id" type="BIGINT">
+                <constraints foreignKeyName="fk_parent_provisioning_action_id" references="provisioning_action(id)"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="provisioning_product"/>
+        </rollback>
+    </changeSet>
+    <changeSet author="t.suignard (generated)" id="services-management-037">
+        <createTable tableName="provisioning_product_aud">
+            <column name="id" type="BIGINT"/>
+            <column name="product_code" type="VARCHAR(255)"/>
+            <column name="action_request" type="ENUM('ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADDR', 'CHGE_CUST', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPE', 'RESUM_OPE')"/>
+            <column name="tag_action_id" type="BIGINT"/>
+            <column name="parent_tag_action_id" type="BIGINT"/>
+            <column name="revision_type" type="TINYINT(3)"/>
+            <column name="revision_id" type="INT"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="provisioning_product_aud"/>
+        </rollback>
+    </changeSet>
+    <changeSet  author="t.suignard" id="tecrep-services-management-038">
+        <modifyDataType columnName = "activity"
+                        tableName =  "provisioning_tag"
+                        newDataType= "ENUM('MOBILE', 'INTERNET', 'TV', 'TRUNKSIP' , 'SIP', 'NDD', 'MAILPRO', 'MAIL', 'WIFI', 'VOIP', 'MEVO', 'OX')"/>
+    </changeSet>
+    <changeSet  author="t.suignard" id="tecrep-services-management-064">
+        <modifyDataType columnName = "activity"
+                        tableName =  "provisioning_tag_aud"
+                        newDataType= "ENUM('MOBILE', 'INTERNET', 'TV', 'TRUNKSIP' , 'SIP', 'NDD', 'MAILPRO', 'MAIL', 'WIFI', 'VOIP', 'MEVO', 'OX')"/>
+    </changeSet>
+    <changeSet  author="t.suignard" id="tecrep-services-management-039">
+        <modifyDataType columnName = "nature"
+                        tableName =  "provisioning_tag"
+                        newDataType= "ENUM('A', 'C', 'P', 'O', 'E', 'R', 'U')"/>
+    </changeSet>
+    <changeSet  author="t.suignard" id="tecrep-services-management-065">
+        <modifyDataType columnName = "nature"
+                        tableName =  "provisioning_tag_aud"
+                        newDataType= "ENUM('A', 'C', 'P', 'O', 'E', 'R', 'U')"/>
+    </changeSet>
+    <changeSet author="t.suignard" id="tecrep-services-management-040">
+        <addColumn tableName="service">
+            <column name="service_order_id" type="VARCHAR(255)"/>
+            <column name="number_request" type="VARCHAR(255)"/>
+            <column name="equipment_id_request" type="BIGINT"/>
+            <column name="access_point_id_request" type="VARCHAR(255)"/>
+            <column name="ancillary_equipment_ids_request" type="VARCHAR(255)"/>
+            <column name="parent_service_order_id" type="VARCHAR(255)"/>
+            <column name="barring_date" type="datetime"/>
+            <column name="reason_request" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="t.suignard" id="tecrep-services-management-041">
+        <addColumn tableName="service_aud">
+            <column name="service_order_id" type="VARCHAR(255)"/>
+            <column name="number_request" type="VARCHAR(255)"/>
+            <column name="equipment_id_request" type="BIGINT"/>
+            <column name="access_point_id_request" type="VARCHAR(255)"/>
+            <column name="ancillary_equipment_ids_request" type="VARCHAR(255)"/>
+            <column name="parent_service_order_id" type="VARCHAR(255)"/>
+            <column name="barring_date" type="datetime"/>
+            <column name="reason_request" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-services-management-048">
+        <dropForeignKeyConstraint baseTableName="service"  constraintName="fk_service_subscription_id"/>
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-services-management-049">
+        <addColumn tableName="provisioning_tag">
+            <column name="parent_tag_code_id" type="BIGINT">
+                <constraints foreignKeyName="fk_provisioning_tag_parent_tag_code" references="provisioning_tag(id)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-services-management-050">
+        <addColumn tableName="provisioning_tag_aud">
+            <column name="parent_tag_code_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-services-management-051">
+        <dropForeignKeyConstraint baseTableName="tag_parameter"  constraintName="fk_tag_parameter_provisioning_tag_id"/>
+    </changeSet>
+    <changeSet author="t.suignard" id="tecrep-services-management-052">
+        <dropForeignKeyConstraint baseTableName="tag_parameter"  constraintName="fk_tag_parameter_technical_parameter_id"/>
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-services-management-054">
+        <createTable tableName="provisioning_action_parameter">
+            <column name="parameter_value" type="VARCHAR(80)"/>
+            <column name="provisioning_action_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_tag_parameter_provisioning_action_id" references="provisioning_action(id)"/>
+            </column>
+            <column name="technical_parameter_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_tag_parameter_technical_parameter_id" references="technical_parameter(id)"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="provisioning_action_parameter"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-services-management-055">
+        <createTable tableName="provisioning_action_parameter_aud">
+            <column name="parameter_value" type="VARCHAR(80)"/>
+            <column name="provisioning_action_id" type="BIGINT"/>
+            <column name="technical_parameter_id" type="BIGINT"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="provisioning_action_parameter_aud"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-services-management-056">
+        <addColumn tableName="technical_parameter">
+            <column name="parameter_type" type="ENUM('CONTEXT', 'STATIC')">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-services-management-059">
+        <dropNotNullConstraint columnName="access_type"
+                               columnDataType="ENUM('DISE', 'FREEDHOME', 'DOCSIS', 'FTTH', 'ZATTOO', 'CAS', 'CONNECTIVITY')"
+                               tableName="provisioning_tag"/>
+    </changeSet>
+
+    <!--<changeSet author="t.suignard" id="tecrep-services-management-062">
+        <dropTable tableName="product"/>
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-services-management-063">
+        <dropTable tableName="product_aud"/>
+    </changeSet>-->
+
+    <changeSet author="t.suignard" id="tecrep-services-management-066">
+        <createTable tableName="technical_parameter_aud">
+            <column name="id" type="BIGINT"/>
+            <column name="description" type="VARCHAR(40)"/>
+            <column name="parameter_code" type="VARCHAR(30)"/>
+            <column name="revision_id" type="BIGINT"/>
+            <column name="revision_type" type="TINYINT(3)"/>
+            <column name="parameter_type" type="ENUM('CONTEXT', 'STATIC')"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="technical_parameter_aud"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet  author="t.suignard" id="tecrep-services-management-067">
+        <addColumn tableName="provisioning_action_parameter_aud">
+            <column name="revision_id" type="INT"/>
+            <column name="revision_type" type="TINYINT(3)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-services-management-068">
+        <update tableName="service">
+            <column name="status" value="ACTIVATED"/>
+            <where>status='BILLABLE'</where>
+        </update>
+        <update tableName="service">
+            <column name="status" value="DEACTIVATED" />
+            <where>status='TERMINATED'</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-services-management-070">
+        <update tableName="service_aud">
+            <column name="status" value="ACTIVATED"/>
+            <where>status='BILLABLE'</where>
+        </update>
+        <update tableName="service_aud">
+            <column name="status" value="DEACTIVATED" />
+            <where>status='TERMINATED'</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-services-management-069">
+        <update tableName="provisioning_tag">
+            <column name="activity" value="OX"/>
+            <where>activity='MAIL'</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-services-management-071">
+        <update tableName="provisioning_tag_aud">
+            <column name="activity" value="OX"/>
+            <where>activity='MAIL'</where>
+        </update>
+    </changeSet>
+
+    <changeSet  author="t.suignard" id="tecrep-services-management-072">
+        <modifyDataType columnName = "action_request"
+                        tableName =  "provisioning_product"
+                        newDataType= "ENUM('ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADR', 'CHGE_CLIENT', 'BARRING', 'UNBARRING', 'SUSP_CLIENT', 'RESUM_CLIENT', 'SUSP_OPER', 'RESUM_OPER')"/>
+    </changeSet>
+
+    <changeSet  author="t.suignard" id="tecrep-services-management-073">
+        <modifyDataType columnName = "action_request"
+                        tableName =  "provisioning_product_aud"
+                        newDataType= "ENUM('ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADR', 'CHGE_CLIENT', 'BARRING', 'UNBARRING', 'SUSP_CLIENT', 'RESUM_CLIENT', 'SUSP_OPER', 'RESUM_OPER')"/>
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-services-management-074">
+        <update tableName="service">
+            <column name="status" value="PENDING"/>
+            <where>status='DRAFT'</where>
+        </update>
+        <update tableName="service_aud">
+            <column name="status" value="PENDING" />
+            <where>status='DRAFT'</where>
+        </update>
+    </changeSet>
+
+    <changeSet  author="t.suignard" id="tecrep-services-management-075">
+        <modifyDataType columnName = "action_request"
+                        tableName =  "service"
+                        newDataType= "ENUM('ACTIVATION', 'SUSPENSION', 'RESUMING', 'SUSP_OPER', 'BARRING', 'UNBARRING', 'DEACTIVATION', 'RESUM_OPER')"/>
+        <modifyDataType columnName = "action_request"
+                        tableName =  "service_aud"
+                        newDataType= "ENUM('ACTIVATION', 'SUSPENSION', 'RESUMING', 'SUSP_OPER', 'BARRING', 'UNBARRING', 'DEACTIVATION', 'RESUM_OPER')"/>
+
+        <update tableName="service">
+            <column name="action_request" value="SUSP_OPER"/>
+            <where>action_request='SUSPENSION'</where>
+        </update>
+
+        <update tableName="service_aud">
+            <column name="action_request" value="SUSP_OPER" />
+            <where>action_request='SUSPENSION'</where>
+        </update>
+
+        <update tableName="service">
+            <column name="action_request" value="RESUM_OPER"/>
+            <where>action_request='RESUMING'</where>
+        </update>
+
+        <update tableName="service_aud">
+            <column name="action_request" value="RESUM_OPER" />
+            <where>action_request='RESUMING'</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="h.amri" id="tecrep-services-management-076">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="service" columnName="subscription_date"/>
+        </preConditions>
+        <dropColumn columnName="subscription_date"
+                    tableName="service">
+        </dropColumn>
+    </changeSet>
+
+    <changeSet author="h.amri" id="tecrep-services-management-077">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="service_aud" columnName="subscription_date"/>
+        </preConditions>
+        <dropColumn columnName="subscription_date"
+                    tableName="service_aud">
+        </dropColumn>
+    </changeSet>
+
+    <changeSet author="h.amri" id="tecrep-services-management-078">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="service" columnName="billing_date"/>
+        </preConditions>
+        <dropColumn columnName="billing_date"
+                    tableName="service">
+        </dropColumn>
+    </changeSet>
+
+    <changeSet author="h.amri" id="tecrep-services-management-079">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="service_aud" columnName="billing_date"/>
+        </preConditions>
+        <dropColumn columnName="billing_date"
+                    tableName="service_aud">
+        </dropColumn>
+    </changeSet>
+
+    <changeSet author="h.amri" id="tecrep-services-management-080">
+        <validCheckSum>8:3116fee0d79b3a156aa1d4062970f48c</validCheckSum>
+        <validCheckSum>8:1e8bcd13805857e9442fa50cdb6c26b5</validCheckSum>
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="service" columnName="expiration_date"/>
+        </preConditions>
+        <dropColumn columnName="expiration_date"
+                    tableName="service">
+        </dropColumn>
+    </changeSet>
+
+    <changeSet author="h.amri" id="tecrep-services-management-081">
+        <validCheckSum>8:14dc32495d60d61d9a260ac07e4e385b</validCheckSum>
+        <validCheckSum>8:443621bc46118f092772db8a60287e4b</validCheckSum>
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="service_aud" columnName="expiration_date"/>
+        </preConditions>
+        <dropColumn columnName="expiration_date"
+                    tableName="service_aud">
+        </dropColumn>
+    </changeSet>
+
+    <changeSet author="h.amri" id="tecrep-services-management-090">
+        <modifyDataType columnName = "status"
+                        tableName =  "service"
+                        newDataType= "ENUM('PENDING', 'ACTIVATED', 'DEACTIVATED', 'SUSPENDED', 'CANCELED')"/>
+
+        <modifyDataType columnName = "status"
+                        tableName =  "service_aud"
+                        newDataType= "ENUM('PENDING', 'ACTIVATED', 'DEACTIVATED', 'SUSPENDED', 'CANCELED')"/>
+    </changeSet>
+
+    <changeSet author="h.amri" id="tecrep-services-management-091">
+        <modifyDataType columnName="access_point_id"
+                        newDataType="varchar(40)"
+                        tableName="service_access"/>
+
+        <modifyDataType columnName="access_point_id"
+                        newDataType="varchar(40)"
+                        tableName="service_access_aud"/>
+    </changeSet>
+
+    <changeSet author="h.amri" id="tecrep-services-management-092">
+        <modifyDataType columnName = "activity"
+                        tableName =  "provisioning_tag"
+                        newDataType= "ENUM('MOBILE', 'INTERNET', 'TV', 'TRUNKSIP', 'NDD', 'MEVO', 'OX')"/>
+
+        <modifyDataType columnName = "activity"
+                        tableName =  "provisioning_tag_aud"
+                        newDataType= "ENUM('MOBILE', 'INTERNET', 'TV', 'TRUNKSIP', 'NDD', 'MEVO', 'OX')"/>
+    </changeSet>
+
+    <changeSet author="h.amri" id="tecrep-services-management-093">
+        <update tableName="service">
+            <column name="action_status" value="COMPLETED" />
+            <where>action_status='TERMINATED'</where>
+        </update>
+
+        <update tableName="service_aud">
+            <column name="action_status" value="COMPLETED" />
+            <where>action_status='TERMINATED'</where>
+        </update>
+
+
+        <modifyDataType columnName="service_order_id"
+                        newDataType="varchar(40)"
+                        tableName="service"/>
+
+        <modifyDataType columnName="service_order_id"
+                        newDataType="varchar(40)"
+                        tableName="service_aud"/>
+
+        <modifyDataType columnName="parent_service_order_id"
+                        newDataType="varchar(40)"
+                        tableName="service"/>
+
+        <modifyDataType columnName="parent_service_order_id"
+                        newDataType="varchar(40)"
+                        tableName="service_aud"/>
+
+        <modifyDataType columnName="number_request"
+                        newDataType="varchar(32)"
+                        tableName="service"/>
+
+        <modifyDataType columnName="number_request"
+                        newDataType="varchar(32)"
+                        tableName="service_aud"/>
+
+        <modifyDataType columnName="access_point_id_request"
+                        newDataType="varchar(40)"
+                        tableName="service"/>
+
+        <modifyDataType columnName="access_point_id_request"
+                        newDataType="varchar(40)"
+                        tableName="service_aud"/>
+
+        <modifyDataType columnName="reason_request"
+                        newDataType="varchar(80)"
+                        tableName="service"/>
+
+        <modifyDataType columnName="reason_request"
+                        newDataType="varchar(80)"
+                        tableName="service_aud"/>
+
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-services-management-094">
+        <modifyDataType columnName = "action_status"
+                        tableName =  "service"
+                        newDataType= "ENUM('PENDING', 'CANCELED', 'COMPLETED')"/>
+
+        <modifyDataType columnName = "action_status"
+                        tableName =  "service_aud"
+                        newDataType= "ENUM('PENDING', 'CANCELED', 'COMPLETED')"/>
+    </changeSet>
+
+    <changeSet author="h.amri" id="tecrep-services-management-095">
+
+        <modifyDataType columnName = "service_action"
+                        tableName =  "provisioning_action"
+                        newDataType= "ENUM('ACTIVATION', 'MIGRATION', 'DEACTIVATION', 'CHGE_ADDR', 'CHGE_CUST', 'CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER','SUSP_OPE', 'RESUM_OPER', 'RESUM_OPE')"/>
+
+        <modifyDataType columnName = "service_action"
+                        tableName =  "provisioning_action_aud"
+                        newDataType= "ENUM('ACTIVATION', 'MIGRATION', 'DEACTIVATION', 'CHGE_ADDR', 'CHGE_CUST', 'CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'SUSP_OPE', 'RESUM_OPER', 'RESUM_OPE')"/>
+
+        <update tableName="provisioning_action">
+            <column name="service_action" value="CHGE_CLI" />
+            <where>service_action='CHGE_CUST'</where>
+        </update>
+
+        <update tableName="provisioning_action_aud">
+            <column name="service_action" value="CHGE_CLI" />
+            <where>service_action='CHGE_CUST'</where>
+        </update>
+
+        <update tableName="provisioning_action">
+            <column name="service_action" value="SUSP_OPER" />
+            <where>service_action='SUSP_OPE'</where>
+        </update>
+
+        <update tableName="provisioning_action_aud">
+            <column name="service_action" value="SUSP_OPER" />
+            <where>service_action='SUSP_OPE'</where>
+        </update>
+
+        <update tableName="provisioning_action">
+            <column name="service_action" value="RESUM_OPER" />
+            <where>service_action='RESUM_OPE'</where>
+        </update>
+
+        <update tableName="provisioning_action_aud">
+            <column name="service_action" value="RESUM_OPER" />
+            <where>service_action='RESUM_OPE'</where>
+        </update>
+
+        <modifyDataType columnName = "service_action"
+                        tableName =  "provisioning_action"
+                        newDataType= "ENUM('ACTIVATION', 'MIGRATION', 'DEACTIVATION', 'CHGE_ADDR', 'CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'RESUM_OPER')"/>
+
+        <modifyDataType columnName = "service_action"
+                        tableName =  "provisioning_action_aud"
+                        newDataType= "ENUM('ACTIVATION', 'MIGRATION', 'DEACTIVATION', 'CHGE_ADDR', 'CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'RESUM_OPER')"/>
+    </changeSet>
+
+    <changeSet  author="h.amri" id="tecrep-services-management-096">
+
+        <modifyDataType columnName = "action_request"
+                        tableName =  "provisioning_product"
+                        newDataType= "ENUM('CHGE_ADR', 'RESUM_CLIENT', 'SUSP_CLIENT', 'CHGE_CLIENT', 'ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADDR', 'CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'RESUM_OPER')"/>
+
+        <modifyDataType columnName = "action_request"
+                        tableName =  "provisioning_product_aud"
+                        newDataType= "ENUM('CHGE_ADR', 'RESUM_CLIENT', 'SUSP_CLIENT', 'CHGE_CLIENT', 'ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADDR', 'CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'RESUM_OPER')"/>
+        <update tableName="provisioning_product">
+            <column name="action_request" value="CHGE_CLI" />
+            <where>action_request='CHGE_CLIENT'</where>
+        </update>
+
+        <update tableName="provisioning_product_aud">
+            <column name="action_request" value="CHGE_CLI" />
+            <where>action_request='CHGE_CLIENT'</where>
+        </update>
+
+        <update tableName="provisioning_product">
+            <column name="action_request" value="SUSP_CLI" />
+            <where>action_request='SUSP_CLIENT'</where>
+        </update>
+
+        <update tableName="provisioning_product_aud">
+            <column name="action_request" value="SUSP_CLI" />
+            <where>action_request='SUSP_CLIENT'</where>
+        </update>
+
+        <update tableName="provisioning_product">
+            <column name="action_request" value="RESUM_CLI" />
+            <where>action_request='RESUM_CLIENT'</where>
+        </update>
+
+        <update tableName="provisioning_product_aud">
+            <column name="action_request" value="RESUM_CLI" />
+            <where>action_request='RESUM_CLIENT'</where>
+        </update>
+
+        <update tableName="provisioning_product">
+            <column name="action_request" value="CHGE_ADDR" />
+            <where>action_request='CHGE_ADR'</where>
+        </update>
+
+        <update tableName="provisioning_product_aud">
+            <column name="action_request" value="CHGE_ADDR" />
+            <where>action_request='CHGE_ADR'</where>
+        </update>
+
+        <modifyDataType columnName = "action_request"
+                        tableName =  "provisioning_product"
+                        newDataType= "ENUM('ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADDR', 'CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'RESUM_OPER')"/>
+
+        <modifyDataType columnName = "action_request"
+                        tableName =  "provisioning_product_aud"
+                        newDataType= "ENUM('ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADDR', 'CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'RESUM_OPER')"/>
+    </changeSet>
+
+    <changeSet  author="h.amri" id="tecrep-services-management-097">
+
+        <modifyDataType columnName = "action_request"
+                        tableName =  "service"
+                        newDataType= "ENUM('SUSPENSION', 'RESUMING', 'ACTIVATION', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'BARRING', 'UNBARRING', 'DEACTIVATION', 'RESUM_OPER')"/>
+        <modifyDataType columnName = "action_request"
+                        tableName =  "service_aud"
+                        newDataType= "ENUM('SUSPENSION', 'RESUMING', 'ACTIVATION', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'BARRING', 'UNBARRING', 'DEACTIVATION', 'RESUM_OPER')"/>
+
+        <update tableName="service">
+            <column name="action_request" value="SUSP_CLI" />
+            <where>action_request='SUSPENSION'</where>
+        </update>
+
+        <update tableName="service_aud">
+            <column name="action_request" value="SUSP_CLI" />
+            <where>action_request='SUSPENSION'</where>
+        </update>
+
+        <update tableName="service">
+            <column name="action_request" value="RESUM_CLI" />
+            <where>action_request='RESUMING'</where>
+        </update>
+
+        <update tableName="service_aud">
+            <column name="action_request" value="RESUM_CLI" />
+            <where>action_request='RESUMING'</where>
+        </update>
+
+        <modifyDataType columnName = "action_request"
+                        tableName =  "service"
+                        newDataType= "ENUM('ACTIVATION', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'BARRING', 'UNBARRING', 'DEACTIVATION', 'RESUM_OPER')"/>
+        <modifyDataType columnName = "action_request"
+                        tableName =  "service_aud"
+                        newDataType= "ENUM('ACTIVATION', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'BARRING', 'UNBARRING', 'DEACTIVATION', 'RESUM_OPER')"/>
+    </changeSet>
+
+    <changeSet  author="h.amri" id="tecrep-services-management-098">
+
+        <modifyDataType columnName = "service_activity"
+                        tableName =  "service"
+                        newDataType= "ENUM('MAIL', 'MAILPRO', 'SIP', 'MOBILE', 'INTERNET', 'TRUNKSIP', 'TV', 'NDD', 'OX', 'MEVO')"/>
+
+        <modifyDataType columnName = "service_activity"
+                        tableName =  "service_aud"
+                        newDataType= "ENUM('MAIL', 'MAILPRO', 'SIP', 'MOBILE', 'INTERNET', 'TRUNKSIP', 'TV', 'NDD', 'OX', 'MEVO')"/>
+
+        <update tableName="service">
+            <column name="service_activity" value="TRUNKSIP" />
+            <where>service_activity='SIP'</where>
+        </update>
+
+        <update tableName="service_aud">
+            <column name="service_activity" value="TRUNKSIP" />
+            <where>service_activity='SIP'</where>
+        </update>
+
+        <update tableName="service">
+            <column name="service_activity" value="OX" />
+            <where>service_activity='MAILPRO'</where>
+        </update>
+
+        <update tableName="service_aud">
+            <column name="service_activity" value="OX" />
+            <where>service_activity='MAILPRO'</where>
+        </update>
+
+        <update tableName="service">
+            <column name="service_activity" value="OX" />
+            <where>service_activity='MAIL'</where>
+        </update>
+
+        <update tableName="service_aud">
+            <column name="service_activity" value="OX" />
+            <where>service_activity='MAIL'</where>
+        </update>
+
+        <modifyDataType columnName = "service_activity"
+                        tableName =  "service"
+                        newDataType= "ENUM('MOBILE', 'INTERNET', 'TRUNKSIP', 'TV', 'NDD', 'OX', 'MEVO')"/>
+
+        <modifyDataType columnName = "service_activity"
+                        tableName =  "service_aud"
+                        newDataType= "ENUM('MOBILE', 'INTERNET', 'TRUNKSIP', 'TV', 'NDD', 'OX', 'MEVO')"/>
+    </changeSet>
+
+    <changeSet author="h.amri" id="tecrep-services-management-099">
+        <modifyDataType columnName = "network_component"
+                        tableName =  "activation_code"
+                        newDataType= "ENUM('TVCAS', 'ZATTOO', 'PCRF', 'SPG', 'SCP', 'DISE', 'U2000')"/>
+
+        <modifyDataType columnName = "network_component"
+                        tableName =  "activation_code_aud"
+                        newDataType= "ENUM('TVCAS', 'ZATTOO', 'PCRF', 'SPG', 'SCP', 'DISE', 'U2000')"/>
+
+        <modifyDataType columnName = "description"
+                        tableName =  "activation_code"
+                        newDataType= "VARCHAR(255)"/>
+
+        <modifyDataType columnName = "description"
+                        tableName =  "activation_code_aud"
+                        newDataType= "VARCHAR(255)"/>
+    </changeSet>
+
+    <changeSet  author="t.suignard" id="tecrep-services-management-100">
+        <modifyDataType columnName = "status"
+                        tableName =  "service"
+                        newDataType= "ENUM('PENDING','ACTIVATED','DEACTIVATED','SUSPENDED','CANCELED', 'BARRED')"/>
+    </changeSet>
+
+    <changeSet  author="t.suignard" id="tecrep-services-management-101">
+        <modifyDataType columnName = "status"
+                        tableName =  "service_aud"
+                        newDataType= "ENUM('PENDING','ACTIVATED','DEACTIVATED','SUSPENDED','CANCELED', 'BARRED')"/>
+    </changeSet>
+    <changeSet  author="h.amri" id="tecrep-services-management-102">
+        <comment>Update service access table</comment>
+        <addColumn tableName="service_access">
+            <column name="equipment_category" type="ENUM('SIMCARD','CPE','ANCILLARY')"/>
+        </addColumn>
+        <comment>Update ancillary equipment audit table</comment>
+        <addColumn tableName="service_access_aud">
+            <column name="equipment_category" type="ENUM('SIMCARD','CPE','ANCILLARY')"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet  author="b.nzonlia" id="tecrep-services-management-103">
+        <modifyDataType columnName = "access_type"
+                        tableName =  "service_access"
+                        newDataType= "ENUM('DISE', 'FREEDHOME', 'DOCSIS', 'FTTH', 'ZATTOO', 'CONNECTIVITY', 'CAS','BBHB')"/>
+
+        <modifyDataType columnName = "access_type"
+                        tableName =  "service_access_aud"
+                        newDataType= "ENUM('DISE', 'FREEDHOME', 'DOCSIS', 'FTTH', 'ZATTOO', 'CONNECTIVITY', 'CAS','BBHB')"/>
+
+        <modifyDataType columnName = "access_type"
+                        tableName =  "provisioning_tag"
+                        newDataType= "ENUM('DISE', 'FREEDHOME', 'DOCSIS', 'FTTH', 'ZATTOO', 'CONNECTIVITY', 'CAS','BBHB')"/>
+
+        <modifyDataType columnName = "access_type"
+                        tableName =  "provisioning_tag_aud"
+                        newDataType= "ENUM('DISE', 'FREEDHOME', 'DOCSIS', 'FTTH', 'ZATTOO', 'CONNECTIVITY', 'CAS','BBHB')"/>
+
+    </changeSet>
+
+    <changeSet author="b.nzonlia" id="tecrep-services-management-104">
+        <modifyDataType columnName = "network_component"
+                        tableName =  "activation_code"
+                        newDataType= "ENUM('TVCAS', 'ZATTOO', 'PCRF', 'SPG', 'SCP', 'DISE', 'U2000','OLT')"/>
+
+        <update tableName="activation_code">
+            <column name="network_component" value="OLT" />
+            <where>network_component='U2000'</where>
+        </update>
+
+        <modifyDataType columnName = "network_component"
+                        tableName =  "activation_code"
+                        newDataType= "ENUM('TVCAS', 'ZATTOO', 'PCRF', 'SPG', 'SCP', 'DISE','OLT')"/>
+
+        <modifyDataType columnName = "network_component"
+                        tableName =  "activation_code_aud"
+                        newDataType= "ENUM('TVCAS', 'ZATTOO', 'PCRF', 'SPG', 'SCP', 'DISE', 'U2000', 'OLT')"/>
+
+        <update tableName="activation_code_aud">
+            <column name="network_component" value="OLT" />
+            <where>network_component='U2000'</where>
+        </update>
+
+        <modifyDataType columnName = "network_component"
+                        tableName =  "activation_code_aud"
+                        newDataType= "ENUM('TVCAS', 'ZATTOO', 'PCRF', 'SPG', 'SCP', 'DISE', 'OLT')"/>
+
+
+    </changeSet>
+
+    <changeSet  author="t.suignard" id="tecrep-services-management-107">
+        <modifyDataType columnName = "action_request"
+                        tableName =  "provisioning_product"
+                        newDataType= "ENUM('ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADDR', 'CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'RESUM_OPER', 'RESET_CELL', 'RETURN_ANCIL', 'CHGE_ANCIL')"/>
+    </changeSet>
+    <changeSet  author="t.suignard" id="tecrep-services-management-108">
+        <modifyDataType columnName = "action_request"
+                        tableName =  "provisioning_product_aud"
+                        newDataType= "ENUM('ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADDR', 'CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'RESUM_OPER', 'RESET_CELL', 'RETURN_ANCIL', 'CHGE_ANCIL')"/>
+    </changeSet>
+
+    <changeSet author="t.suignard" id="tecrep-services-management-109">
+        <addUniqueConstraint
+                columnNames="tag_id, tag_action"
+                constraintName="composite_key_provisioning_action_id_action"
+                tableName="provisioning_action"
+        />
+    </changeSet>
+    <changeSet author="t.suignard" id="tecrep-services-management-110">
+        <addUniqueConstraint
+                columnNames="provisioning_action_id, technical_parameter_id"
+                constraintName="composite_key_pap_action_id_technical_parameter_id"
+                tableName="provisioning_action_parameter"
+        />
+    </changeSet>
+    <changeSet author="t.suignard" id="tecrep-services-management-111">
+        <addUniqueConstraint
+                columnNames="service_activity, crm_service_id"
+                constraintName="composite_key_service_service_activity_crm_service_id"
+                tableName="service"
+        />
+    </changeSet>
+    <changeSet author="t.suignard" id="tecrep-services-management-112">
+        <addUniqueConstraint
+                columnNames="number"
+                constraintName="unique_key_service_number"
+                tableName="service"
+        />
+    </changeSet>
+    <changeSet author="t.suignard" id="tecrep-services-management-113">
+        <addUniqueConstraint
+                columnNames="equipment_id"
+                constraintName="unique_key_service_access_equipment_id"
+                tableName="service_access"
+        />
+    </changeSet>
+    <changeSet author="t.suignard" id="tecrep-services-management-114">
+        <addUniqueConstraint
+                columnNames="access_point_id"
+                constraintName="unique_key_service_access_access_point_id"
+                tableName="service_access"
+        />
+    </changeSet>
+
+    <changeSet  author="t.suignard" id="tecrep-services-management-115">
+        <modifyDataType columnName = "tag_action"
+                        tableName =  "provisioning_action"
+                        newDataType= "ENUM('PURCHASE', 'CANCEL', 'MIGRATION', 'TRANSITION', 'TRANSFERT')"/>
+        <modifyDataType columnName = "tag_action"
+                        tableName =  "provisioning_action_aud"
+                        newDataType= "ENUM('PURCHASE', 'CANCEL', 'MIGRATION', 'TRANSITION', 'TRANSFERT')"/>
+    </changeSet>
+
+    <changeSet  author="t.suignard" id="tecrep-services-management-116">
+        <validCheckSum>8:44134ef1cd8b5cbf390087583ed35810</validCheckSum>
+        <modifyDataType columnName = "action_request"
+                        tableName =  "provisioning_product"
+                        newDataType= "ENUM('ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADDR', 'CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'RESUM_OPER', 'TRANSFERT','RESET_CELL','RETURN_ANCIL','CHGE_ANCIL')"/>
+
+        <modifyDataType columnName = "action_request"
+                        tableName =  "provisioning_product_aud"
+                        newDataType= "ENUM('ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADDR', 'CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'RESUM_OPER', 'TRANSFERT','RESET_CELL','RETURN_ANCIL','CHGE_ANCIL')"/>
+
+    </changeSet>
+
+    <changeSet  author="t.suignard" id="tecrep-services-management-117">
+        <modifyDataType columnName = "tag_action"
+                        tableName =  "provisioning_action"
+                        newDataType= "ENUM('PURCHASE', 'CANCEL', 'MIGRATION', 'TRANSITION', 'TRANSFER')"/>
+        <modifyDataType columnName = "tag_action"
+                        tableName =  "provisioning_action_aud"
+                        newDataType= "ENUM('PURCHASE', 'CANCEL', 'MIGRATION', 'TRANSITION', 'TRANSFER')"/>
+    </changeSet>
+
+    <changeSet  author="t.suignard" id="tecrep-services-management-118">
+        <validCheckSum>8:bfa915616c7cdb0e3d9f332171043fa1</validCheckSum>
+        <modifyDataType columnName = "action_request"
+                        tableName =  "provisioning_product"
+                        newDataType= "ENUM('ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADDR', 'CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'RESUM_OPER', 'TRANSFER','RESET_CELL','RETURN_ANCIL','CHGE_ANCIL')"/>
+
+        <modifyDataType columnName = "action_request"
+                        tableName =  "provisioning_product_aud"
+                        newDataType= "ENUM('ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADDR', 'CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'RESUM_OPER', 'TRANSFER','RESET_CELL','RETURN_ANCIL','CHGE_ANCIL')"/>
+
+    </changeSet>
+
+    <changeSet author="g.fantappie" id="tecrep-services-management-119">
+        <modifyDataType columnName = "activity"
+                        tableName =  "provisioning_tag"
+                        newDataType= "ENUM('MOBILE', 'INTERNET', 'TV', 'TELEPHONY' , 'SIP', 'NDD', 'MAILPRO', 'MAIL', 'WIFI', 'VOIP', 'MEVO', 'OX')"/>
+        <modifyDataType columnName = "activity"
+                        tableName =  "provisioning_tag_aud"
+                        newDataType= "ENUM('MOBILE', 'INTERNET', 'TV', 'TELEPHONY' , 'SIP', 'NDD', 'MAILPRO', 'MAIL', 'WIFI', 'VOIP', 'MEVO', 'OX')"/>
+
+        <modifyDataType columnName = "action_request"
+                        tableName =  "provisioning_product"
+                        newDataType= "ENUM('ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADDR', 'CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'RESUM_OPER', 'TRANSFER', 'RESET_CELL', 'RETURN_ANCIL', 'CHGE_ANCIL', 'ADD_QTY','DEL_QTY')"/>
+        <modifyDataType columnName = "action_request"
+                        tableName =  "provisioning_product_aud"
+                        newDataType= "ENUM('ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADDR', 'CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'RESUM_OPER', 'TRANSFER', 'RESET_CELL', 'RETURN_ANCIL', 'CHGE_ANCIL', 'ADD_QTY','DEL_QTY')"/>
+
+        <modifyDataType columnName = "service_activity"
+                        tableName =  "service"
+                        newDataType= "ENUM('MOBILE', 'INTERNET', 'TELEPHONY', 'TV', 'NDD', 'OX', 'MEVO')"/>
+        <modifyDataType columnName = "service_activity"
+                        tableName =  "service_aud"
+                        newDataType= "ENUM('MOBILE', 'INTERNET', 'TELEPHONY', 'TV', 'NDD', 'OX', 'MEVO')"/>
+
+    </changeSet>
+    <changeSet author="g.fantappie" id="tecrep-services-management-120">
+        <addColumn tableName="service">
+            <column name="range_id" type="BIGINT"/>
+        </addColumn>
+        <addColumn tableName="service_aud">
+            <column name="range_id" type="BIGINT"/>
+        </addColumn>
+
+        <addColumn tableName="service_component">
+            <column name="component_type" type="ENUM('TRUNKSIP', 'CLOUDCALLING')" />
+        </addColumn>
+        <addColumn tableName="service_component">
+            <column name="tech_id" type="BIGINT"/>
+        </addColumn>
+
+        <addColumn tableName="service_component_aud">
+            <column name="component_type" type="ENUM('TRUNKSIP', 'CLOUDCALLING')" />
+        </addColumn>
+        <addColumn tableName="service_component_aud">
+            <column name="tech_id" type="BIGINT"/>
+        </addColumn>
+
+    </changeSet>
+    <changeSet author="" id="tecrep-services-management-121">
+        <addUniqueConstraint
+                tableName="service"
+                constraintName="unique_service_range_id"
+                columnNames="range_id"/>
+
+    </changeSet>
+    <changeSet author="g.fantappie" id="tecrep-services-management-121">
+        <dropColumn tableName="service" columnName="number_request"/>
+        <dropColumn tableName="service" columnName="equipment_id_request"/>
+        <dropColumn tableName="service" columnName="access_point_id_request" />
+        <dropColumn tableName="service" columnName="ancillary_equipment_ids_request"/>
+        <dropColumn tableName="service" columnName="parent_service_order_id" />
+
+        <dropColumn tableName="service_aud" columnName="number_request"/>
+        <dropColumn tableName="service_aud" columnName="equipment_id_request"/>
+        <dropColumn tableName="service_aud" columnName="access_point_id_request" />
+        <dropColumn tableName="service_aud" columnName="ancillary_equipment_ids_request"/>
+        <dropColumn tableName="service_aud" columnName="parent_service_order_id" />
+
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,71 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet author="b.nzonlia" id="tecrep-services-management-1.2.0">
+        <createTable tableName="import_history">
+            <column autoIncrement="true" name="id" type="BIGINT(19)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="end" type="datetime(6)"/>
+            <column name="file_name" type="VARCHAR(255)"/>
+            <column name="import_status" type="ENUM('ABORTED', 'COMPLETED', 'STARTED')"/>
+            <column name="start" type="datetime(6)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="b.nzonlia" id="tecrep-services-management-1.2.1">
+        <createTable tableName="import_error">
+            <column name="line" type="INT(10)"/>
+            <column name="error" type="TEXT"/>
+            <column name="import_history_id" type="BIGINT(19)"/>
+            <column autoIncrement="true" name="id" type="BIGINT(19)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tab" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="b.nzonlia" id="tecrep-services-management-1.2.2">
+        <addForeignKeyConstraint baseColumnNames="import_history_id" baseTableName="import_error" constraintName="FK_file_error" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="import_history"/>
+    </changeSet>
+    
+    <changeSet author="g.fantappie" id="tecrep-services-management-1.2.3">
+        <modifyDataType tableName="activation_code"
+                        columnName="network_component"
+                        newDataType="ENUM('TVCAS', 'ZATTOO', 'PCRF', 'SPG', 'SCP', 'DISE', 'OLT', 'CS')"/>
+    </changeSet>
+    <changeSet author="g.fantappie" id="tecrep-services-management-1.2.4">
+        <modifyDataType tableName="provisioning_tag"
+                        columnName="access_type"
+                        newDataType="ENUM('DISE', 'FREEDHOME', 'DOCSIS', 'FTTH', 'ZATTOO', 'CONNECTIVITY','CAS', 'MOBCY', 'BBHB', 'PREPAY')"/>
+    </changeSet>
+
+    <changeSet author="g.fantappie" id="tecrep-services-management-1.2.5">
+        <modifyDataType tableName="service_access"
+                        columnName="access_type"
+                        newDataType="ENUM('DISE', 'FREEDHOME', 'DOCSIS', 'FTTH', 'ZATTOO', 'CONNECTIVITY','CAS', 'MOBCY', 'BBHB', 'PREPAY')"/>
+    </changeSet>
+
+    <changeSet author="g.fantappie" id="tecrep-services-management-1.2.6">
+        <modifyDataType tableName="provisioning_tag_aud"
+                        columnName="access_type"
+                        newDataType="ENUM('DISE', 'FREEDHOME', 'DOCSIS', 'FTTH', 'ZATTOO', 'CONNECTIVITY','CAS', 'MOBCY', 'BBHB', 'PREPAY')"/>
+
+        <modifyDataType tableName="service_access_aud"
+                        columnName="access_type"
+                        newDataType="ENUM('DISE', 'FREEDHOME', 'DOCSIS', 'FTTH', 'ZATTOO', 'CONNECTIVITY','CAS', 'MOBCY', 'BBHB', 'PREPAY')"/>
+    </changeSet>
+
+    <changeSet author="g.fantappie" id="tecrep-services-management-1.2.7">
+        <modifyDataType tableName="provisioning_product"
+                        columnName="action_request"
+                        newDataType="ENUM('FIRST_ACTIVATION', 'ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADDR','CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'RESUM_OPER', 'RESET_CELL', 'RETURN_ANCIL', 'CHGE_ANCIL', 'TRANSFER', 'ADD_QTY', 'DEL_QTY')"/>
+
+        <modifyDataType tableName="provisioning_product_aud"
+                        columnName="action_request"
+                        newDataType="ENUM('FIRST_ACTIVATION', 'ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADDR','CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'RESUM_OPER', 'RESET_CELL', 'RETURN_ANCIL', 'CHGE_ANCIL', 'TRANSFER', 'ADD_QTY', 'DEL_QTY')"/>
+    </changeSet>
+
+</databaseChangeLog>

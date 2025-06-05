@@ -1,0 +1,1106 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="MTOSS-1276-1" author="h.amri">
+        <!-- Change component type from enum to varchar -->
+        <modifyDataType columnName="component_type" newDataType="varchar(30)" tableName="service_component"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-1277-1" author="h.amri">
+        <!-- Add component_type field in provisioning_tag table  -->
+        <addColumn tableName="provisioning_tag">
+            <column name="component_type"
+                    type="varchar(30)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-1276-2" author="h.amri">
+        <!-- Change component type from enum to varchar in service_component_aud table -->
+        <modifyDataType columnName="component_type" newDataType="varchar(30)" tableName="service_component_aud"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-1277-2" author="h.amri">
+        <!-- Add component_type field in provisioning_tag_aud table  -->
+        <addColumn tableName="provisioning_tag_aud">
+            <column name="component_type"
+                    type="varchar(30)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-1" author="j.lethiec">
+        <dropTable tableName="activation_code_aud"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-2" author="j.lethiec">
+        <dropTable tableName="provisioning_action_aud"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-3" author="j.lethiec">
+        <dropTable tableName="provisioning_action_parameter_aud"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-4" author="j.lethiec">
+        <dropTable tableName="provisioning_product_aud"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-5" author="j.lethiec">
+        <dropTable tableName="provisioning_tag_aud"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-6" author="j.lethiec">
+        <dropTable tableName="tag_activation_aud"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-7" author="j.lethiec">
+        <dropTable tableName="technical_parameter_aud"/>
+    </changeSet>
+
+    <!-- Migrate Provisioning Action -> Provisioning Tag relationship -->
+
+    <changeSet id="MTOSS-831-8" author="j.lethiec">
+        <addColumn tableName="provisioning_action">
+            <column name="tag_code" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-9" author="j.lethiec">
+        <comment>Populate provisioning_action.tag_code with related provisioning tag</comment>
+        <sql>
+            update provisioning_action pa inner join provisioning_tag pt
+            on pa.tag_id = pt.id
+                set pa.tag_code = pt.tag_code
+            where pa.tag_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-10" author="j.lethiec">
+        <addNotNullConstraint tableName="provisioning_action" columnName="tag_code" columnDataType="varchar(255)"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-11" author="j.lethiec">
+        <addForeignKeyConstraint baseTableName="provisioning_action" baseColumnNames="tag_code"
+                                 referencedTableName="provisioning_tag" referencedColumnNames="tag_code"
+                                 constraintName="fk_provisioning_action_tag_code"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-12" author="j.lethiec">
+        <dropForeignKeyConstraint baseTableName="provisioning_action" constraintName="fk_tag_id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-13" author="j.lethiec">
+        <dropIndex tableName="provisioning_action" indexName="composite_key_provisioning_action_id_action"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-14" author="j.lethiec">
+        <addUniqueConstraint tableName="provisioning_action" columnNames="id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-15" author="j.lethiec">
+        <dropPrimaryKey tableName="provisioning_action"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-16" author="j.lethiec">
+        <addPrimaryKey tableName="provisioning_action" columnNames="tag_code,tag_action"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-17" author="j.lethiec">
+        <dropColumn tableName="provisioning_action" columnName="tag_id"/>
+    </changeSet>
+
+    <!-- Migrate Provisioning Action Parameter -> Provisioning Action relationship -->
+
+    <changeSet id="MTOSS-831-18" author="j.lethiec">
+        <addColumn tableName="provisioning_action_parameter">
+            <column name="tag_code" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-19" author="j.lethiec">
+        <addColumn tableName="provisioning_action_parameter">
+            <column name="tag_action" type="enum('PURCHASE', 'CANCEL', 'MIGRATION', 'TRANSITION', 'TRANSFER')"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-20" author="j.lethiec">
+        <comment>Populate provisioning_action_parameter.tag_code and tag_action with related provisioning action
+        </comment>
+        <sql>
+            update provisioning_action_parameter pap
+                inner join provisioning_action pa
+            on pap.provisioning_action_id = pa.id
+                set pap.tag_code = pa.tag_code, pap.tag_action = pa.tag_action
+            where pap.tag_action is null or pap.tag_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-21" author="j.lethiec">
+        <addNotNullConstraint tableName="provisioning_action_parameter" columnName="tag_code"
+                              columnDataType="varchar(255)"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-22" author="j.lethiec">
+        <addNotNullConstraint tableName="provisioning_action_parameter" columnName="tag_action"
+                              columnDataType="enum('PURCHASE', 'CANCEL', 'MIGRATION', 'TRANSITION', 'TRANSFER')"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-23" author="j.lethiec">
+        <addForeignKeyConstraint baseTableName="provisioning_action_parameter" baseColumnNames="tag_code,tag_action"
+                                 referencedTableName="provisioning_action" referencedColumnNames="tag_code,tag_action"
+                                 constraintName="fk_provisioning_action_parameter_provisioning_action"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-24" author="j.lethiec">
+        <dropForeignKeyConstraint baseTableName="provisioning_action_parameter"
+                                  constraintName="fk_tag_parameter_provisioning_action_id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-25" author="j.lethiec">
+        <dropPrimaryKey tableName="provisioning_action_parameter"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-26" author="j.lethiec">
+        <addPrimaryKey tableName="provisioning_action_parameter"
+                       columnNames="technical_parameter_id,tag_code,tag_action"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-27-1" author="j.lethiec">
+        <preConditions onFail="MARK_RAN">
+            <indexExists tableName="provisioning_action_parameter" indexName="composite_key_pap_action_id_technical_parameter_id"/>
+        </preConditions>
+
+        <dropIndex tableName="provisioning_action_parameter" indexName="composite_key_pap_action_id_technical_parameter_id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-27" author="j.lethiec">
+        <dropColumn tableName="provisioning_action_parameter" columnName="provisioning_action_id"/>
+    </changeSet>
+
+    <!-- Modify Technical Parameter primary key -->
+
+    <changeSet id="MTOSS-831-28" author="j.lethiec">
+        <addUniqueConstraint tableName="technical_parameter" columnNames="id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-29" author="j.lethiec">
+        <dropPrimaryKey tableName="technical_parameter"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-30" author="j.lethiec">
+        <dropIndex tableName="technical_parameter" indexName="uniqueParamCodeAndType"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-31" author="j.lethiec">
+        <addPrimaryKey tableName="technical_parameter" columnNames="parameter_code,parameter_type"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-32" author="j.lethiec">
+        <modifyDataType tableName="technical_parameter" columnName="parameter_code" newDataType="varchar(255)"/>
+    </changeSet>
+
+    <!-- Migrate Service Parameter -> Technical Parameter relationship -->
+
+    <changeSet id="MTOSS-831-33" author="j.lethiec">
+        <renameTable oldTableName="service_parameters" newTableName="service_parameter"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-34" author="j.lethiec">
+        <addColumn tableName="service_parameter">
+            <column name="parameter_code" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-35" author="j.lethiec">
+        <addColumn tableName="service_parameter">
+            <column name="parameter_type" type="enum('CONTEXT', 'STATIC')"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-36" author="j.lethiec">
+        <comment>Populate service_parameter.parameter_code and parameter_type with related technical parameters
+        </comment>
+        <sql>
+            update service_parameter sp
+                inner join technical_parameter tp
+            on sp.technical_parameter_id = tp.id
+                set sp.parameter_code = tp.parameter_code, sp.parameter_type = tp.parameter_type
+            where sp.parameter_type is null or sp.parameter_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-37" author="j.lethiec">
+        <addNotNullConstraint tableName="service_parameter" columnName="parameter_code"
+                              columnDataType="varchar(255)"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-38" author="j.lethiec">
+        <addNotNullConstraint tableName="service_parameter" columnName="parameter_type"
+                              columnDataType="enum('CONTEXT', 'STATIC')"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-39" author="j.lethiec">
+        <addForeignKeyConstraint baseTableName="service_parameter" baseColumnNames="parameter_code,parameter_type"
+                                 referencedTableName="technical_parameter"
+                                 referencedColumnNames="parameter_code,parameter_type"
+                                 constraintName="fk_service_parameter_technical_parameter"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-40" author="j.lethiec">
+        <dropForeignKeyConstraint baseTableName="service_parameter"
+                                  constraintName="technical_parameter_id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-41" author="j.lethiec">
+        <dropPrimaryKey tableName="service_parameter"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-42" author="j.lethiec">
+        <addPrimaryKey tableName="service_parameter"
+                       columnNames="service_id,parameter_code,parameter_type"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-43" author="j.lethiec">
+        <dropColumn tableName="service_parameter"
+                    columnName="technical_parameter_id"/>
+    </changeSet>
+
+    <!-- Migrate Provisioning Action Parameter -> Technical Parameter relationship -->
+
+    <changeSet id="MTOSS-831-44" author="j.lethiec">
+        <addColumn tableName="provisioning_action_parameter">
+            <column name="parameter_code" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-45" author="j.lethiec">
+        <addColumn tableName="provisioning_action_parameter">
+            <column name="parameter_type" type="enum('CONTEXT', 'STATIC')"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-46" author="j.lethiec">
+        <comment>Populate provisioning_action_parameter.parameter_code and parameter_type with related technical
+            parameters
+        </comment>
+        <sql>
+            update provisioning_action_parameter pap
+                inner join technical_parameter tp
+            on pap.technical_parameter_id = tp.id
+                set pap.parameter_code = tp.parameter_code, pap.parameter_type = tp.parameter_type
+            where pap.parameter_type is null or pap.parameter_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-47" author="j.lethiec">
+        <addNotNullConstraint tableName="provisioning_action_parameter" columnName="parameter_code"
+                              columnDataType="varchar(255)"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-48" author="j.lethiec">
+        <addNotNullConstraint tableName="provisioning_action_parameter" columnName="parameter_type"
+                              columnDataType="enum('CONTEXT', 'STATIC')"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-49" author="j.lethiec">
+        <addForeignKeyConstraint baseTableName="provisioning_action_parameter"
+                                 baseColumnNames="parameter_code,parameter_type"
+                                 referencedTableName="technical_parameter"
+                                 referencedColumnNames="parameter_code,parameter_type"
+                                 constraintName="fk_provisioning_action_parameter_technical_parameter"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-50" author="j.lethiec">
+        <dropForeignKeyConstraint baseTableName="provisioning_action_parameter"
+                                  constraintName="fk_tag_parameter_technical_parameter_id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-51" author="j.lethiec">
+        <dropPrimaryKey tableName="provisioning_action_parameter"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-52" author="j.lethiec">
+        <addPrimaryKey tableName="provisioning_action_parameter"
+                       columnNames="tag_code,tag_action,parameter_code,parameter_type"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-53" author="j.lethiec">
+        <dropColumn tableName="provisioning_action_parameter"
+                    columnName="technical_parameter_id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-54" author="j.lethiec">
+        <createIndex tableName="provisioning_action_parameter"
+                     indexName="fk_provisioning_action_parameter_provisioning_action">
+            <column name="tag_code"/>
+            <column name="tag_action"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- Migrate Provisioning Product -> Provisioning Action relationship -->
+
+    <changeSet id="MTOSS-831-55" author="j.lethiec">
+        <addColumn tableName="provisioning_product">
+            <column name="tag_code" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-56" author="j.lethiec">
+        <addColumn tableName="provisioning_product">
+            <column name="tag_action" type="enum('PURCHASE', 'CANCEL', 'MIGRATION', 'TRANSITION', 'TRANSFER')"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-57" author="j.lethiec">
+        <comment>Populate provisioning_product.tag_code and tag_action with related provisioning actions
+        </comment>
+        <sql>
+            update provisioning_product pp
+                inner join provisioning_action pa
+            on pp.tag_action_id = pa.id
+                set pp.tag_code = pa.tag_code, pp.tag_action = pa.tag_action
+            where pp.tag_action is null or pp.tag_action is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-58" author="j.lethiec">
+        <addNotNullConstraint tableName="provisioning_product" columnName="tag_code"
+                              columnDataType="varchar(255)"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-59" author="j.lethiec">
+        <addNotNullConstraint tableName="provisioning_product" columnName="tag_action"
+                              columnDataType="enum('PURCHASE', 'CANCEL', 'MIGRATION', 'TRANSITION', 'TRANSFER')"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-60" author="j.lethiec">
+        <addForeignKeyConstraint baseTableName="provisioning_product" baseColumnNames="tag_code,tag_action"
+                                 referencedTableName="provisioning_action" referencedColumnNames="tag_code,tag_action"
+                                 constraintName="fk_provisioning_product_provisioning_action"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-61" author="j.lethiec">
+        <dropForeignKeyConstraint baseTableName="provisioning_product"
+                                  constraintName="fk_provisioning_action_id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-62" author="j.lethiec">
+        <addUniqueConstraint tableName="provisioning_product" columnNames="id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-63" author="j.lethiec">
+        <dropPrimaryKey tableName="provisioning_product"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-64" author="j.lethiec">
+        <addPrimaryKey tableName="provisioning_product"
+                       columnNames="product_code,action_request,tag_code,tag_action"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-65" author="j.lethiec">
+        <dropColumn tableName="provisioning_product"
+                    columnName="tag_action_id"/>
+    </changeSet>
+
+    <!-- Migrate Provisioning Product -> parent Provisioning Action relationship -->
+
+    <changeSet id="MTOSS-831-66" author="j.lethiec">
+        <addColumn tableName="provisioning_product">
+            <column name="parent_tag_code" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-67" author="j.lethiec">
+        <addColumn tableName="provisioning_product">
+            <column name="parent_tag_action" type="enum('PURCHASE', 'CANCEL', 'MIGRATION', 'TRANSITION', 'TRANSFER')"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-68" author="j.lethiec">
+        <comment>Populate provisioning_product.parent_tag_code and parent_tag_action with related provisioning actions
+        </comment>
+        <sql>
+            update provisioning_product pp
+                inner join provisioning_action pa
+            on pp.parent_tag_action_id = pa.id
+                set pp.parent_tag_code = pa.tag_code, pp.parent_tag_action = pa.tag_action
+            where pp.parent_tag_action is null or pp.parent_tag_action is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-69" author="j.lethiec">
+        <addForeignKeyConstraint baseTableName="provisioning_product"
+                                 baseColumnNames="parent_tag_code,parent_tag_action"
+                                 referencedTableName="provisioning_action" referencedColumnNames="tag_code,tag_action"
+                                 constraintName="fk_provisioning_product_parent_provisioning_action"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-70" author="j.lethiec">
+        <dropForeignKeyConstraint baseTableName="provisioning_product"
+                                  constraintName="fk_parent_provisioning_action_id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-71" author="j.lethiec">
+        <dropColumn tableName="provisioning_product"
+                    columnName="parent_tag_action_id"/>
+    </changeSet>
+
+    <!-- Modify Activation Code primary key -->
+
+    <changeSet id="MTOSS-831-72" author="j.lethiec">
+        <addUniqueConstraint tableName="activation_code" columnNames="id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-73" author="j.lethiec">
+        <dropPrimaryKey tableName="activation_code"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-74" author="j.lethiec">
+        <addPrimaryKey tableName="activation_code" columnNames="activ_code"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-75" author="j.lethiec">
+        <dropIndex tableName="activation_code" indexName="activ_code"/>
+    </changeSet>
+
+    <!-- Migrate Service Activation -> Activation Code relationship -->
+
+    <changeSet id="MTOSS-831-76" author="j.lethiec">
+        <renameTable oldTableName="service_activations" newTableName="service_activation"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-77" author="j.lethiec">
+        <addColumn tableName="service_activation">
+            <column name="activ_code" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-78-1" author="j.lethiec">
+        <comment>Populate service_activation.activ_code with related activation code - first million
+        </comment>
+        <sql>
+            update service_activation sa
+                inner join (select service_id, activ_id
+                from service_activation sa2
+                order by service_id, activ_id
+                limit 1000000 offset 0) as sa2 on sa.service_id = sa2.service_id and
+                sa.activ_id = sa2.activ_id and sa.activ_code is null
+                inner join activation_code ac
+                on sa.activ_id = ac.id
+                set sa.activ_code = ac.activ_code
+            where sa.activ_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-78-2" author="j.lethiec">
+        <comment>Populate service_activation.activ_code with related activation code - second million
+        </comment>
+        <sql>
+            update service_activation sa
+                inner join (select service_id, activ_id
+                from service_activation sa2
+                order by service_id, activ_id
+                limit 1000000 offset 1000000) as sa2 on sa.service_id = sa2.service_id and
+                sa.activ_id = sa2.activ_id and sa.activ_code is null
+                inner join activation_code ac
+                on sa.activ_id = ac.id
+                set sa.activ_code = ac.activ_code
+            where sa.activ_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-78-3" author="j.lethiec">
+        <comment>Populate service_activation.activ_code with related activation code - third million
+        </comment>
+        <sql>
+            update service_activation sa
+                inner join (select service_id, activ_id
+                from service_activation sa2
+                order by service_id, activ_id
+                limit 1000000 offset 2000000) as sa2 on sa.service_id = sa2.service_id and
+                sa.activ_id = sa2.activ_id and sa.activ_code is null
+                inner join activation_code ac
+                on sa.activ_id = ac.id
+                set sa.activ_code = ac.activ_code
+            where sa.activ_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-78-4" author="j.lethiec">
+        <comment>Populate service_activation.activ_code with related activation code - fourth million
+        </comment>
+        <sql>
+            update service_activation sa
+                inner join (select service_id, activ_id
+                from service_activation sa2
+                order by service_id, activ_id
+                limit 1000000 offset 3000000) as sa2 on sa.service_id = sa2.service_id and
+                sa.activ_id = sa2.activ_id and sa.activ_code is null
+                inner join activation_code ac
+                on sa.activ_id = ac.id
+                set sa.activ_code = ac.activ_code
+            where sa.activ_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-78-5" author="j.lethiec">
+        <comment>Populate service_activation.activ_code with related activation code - fifth million
+        </comment>
+        <sql>
+            update service_activation sa
+                inner join (select service_id, activ_id
+                from service_activation sa2
+                order by service_id, activ_id
+                limit 1000000 offset 4000000) as sa2 on sa.service_id = sa2.service_id and
+                sa.activ_id = sa2.activ_id and sa.activ_code is null
+                inner join activation_code ac
+                on sa.activ_id = ac.id
+                set sa.activ_code = ac.activ_code
+            where sa.activ_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-78-6" author="j.lethiec">
+        <comment>Populate service_activation.activ_code with related activation code - sixth million
+        </comment>
+        <sql>
+            update service_activation sa
+                inner join (select service_id, activ_id
+                from service_activation sa2
+                order by service_id, activ_id
+                limit 1000000 offset 5000000) as sa2 on sa.service_id = sa2.service_id and
+                sa.activ_id = sa2.activ_id and sa.activ_code is null
+                inner join activation_code ac
+                on sa.activ_id = ac.id
+                set sa.activ_code = ac.activ_code
+            where sa.activ_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-78-7" author="j.lethiec">
+        <comment>Populate service_activation.activ_code with related activation code - seventh million
+        </comment>
+        <sql>
+            update service_activation sa
+                inner join (select service_id, activ_id
+                from service_activation sa2
+                order by service_id, activ_id
+                limit 1000000 offset 6000000) as sa2 on sa.service_id = sa2.service_id and
+                sa.activ_id = sa2.activ_id and sa.activ_code is null
+                inner join activation_code ac
+                on sa.activ_id = ac.id
+                set sa.activ_code = ac.activ_code
+            where sa.activ_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-78-8" author="j.lethiec">
+        <comment>Populate service_activation.activ_code with related activation code - eigth million
+        </comment>
+        <sql>
+            update service_activation sa
+                inner join (select service_id, activ_id
+                from service_activation sa2
+                order by service_id, activ_id
+                limit 1000000 offset 7000000) as sa2 on sa.service_id = sa2.service_id and
+                sa.activ_id = sa2.activ_id and sa.activ_code is null
+                inner join activation_code ac
+                on sa.activ_id = ac.id
+                set sa.activ_code = ac.activ_code
+            where sa.activ_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-78-9" author="j.lethiec">
+        <comment>Populate service_activation.activ_code with related activation code - ninth million
+        </comment>
+        <sql>
+            update service_activation sa
+                inner join (select service_id, activ_id
+                from service_activation sa2
+                order by service_id, activ_id
+                limit 1000000 offset 8000000) as sa2 on sa.service_id = sa2.service_id and
+                sa.activ_id = sa2.activ_id and sa.activ_code is null
+                inner join activation_code ac
+                on sa.activ_id = ac.id
+                set sa.activ_code = ac.activ_code
+            where sa.activ_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-78-10" author="j.lethiec">
+        <comment>Populate service_activation.activ_code with related activation code - tenth million
+        </comment>
+        <sql>
+            update service_activation sa
+                inner join (select service_id, activ_id
+                from service_activation sa2
+                order by service_id, activ_id
+                limit 1000000 offset 9000000) as sa2 on sa.service_id = sa2.service_id and
+                sa.activ_id = sa2.activ_id and sa.activ_code is null
+                inner join activation_code ac
+                on sa.activ_id = ac.id
+                set sa.activ_code = ac.activ_code
+            where sa.activ_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-79" author="j.lethiec">
+        <addNotNullConstraint tableName="service_activation" columnName="activ_code"
+                              columnDataType="varchar(255)"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-80" author="j.lethiec">
+        <addForeignKeyConstraint baseTableName="service_activation" baseColumnNames="activ_code"
+                                 referencedTableName="activation_code" referencedColumnNames="activ_code"
+                                 constraintName="fk_service_activation_activation_code"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-81" author="j.lethiec">
+        <dropForeignKeyConstraint baseTableName="service_activation" constraintName="fk_service_activations_activ_id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-82" author="j.lethiec">
+        <dropIndex tableName="service_activation" indexName="fk_service_activations_activ_id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-83" author="j.lethiec">
+        <createIndex tableName="service_activation" indexName="service_id">
+            <column name="service_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-84" author="j.lethiec">
+        <dropPrimaryKey tableName="service_activation"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-85" author="j.lethiec">
+        <addPrimaryKey tableName="service_activation"
+                       columnNames="service_id,activ_code"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-85-1" author="j.lethiec">
+        <preConditions onFail="MARK_RAN">
+            <indexExists tableName="service_activation" indexName="fk-uniqueconstraint-service-activations"/>
+        </preConditions>
+
+        <dropIndex tableName="service_activation" indexName="fk-uniqueconstraint-service-activations"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-86" author="j.lethiec">
+        <dropColumn tableName="service_activation"
+                    columnName="activ_id"/>
+    </changeSet>
+
+    <!-- Migrate Service Tag -> Provisioning Tag relationship -->
+
+    <changeSet id="MTOSS-831-87" author="j.lethiec">
+        <addColumn tableName="service_tag">
+            <column name="tag_code" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-88-1" author="j.lethiec">
+        <comment>Populate service_tag.tag_code with related provisioning tag - first million
+        </comment>
+        <sql>
+            update service_tag st
+                inner join (select service_id, tag_id
+                from service_tag st2
+                order by service_id, tag_id
+                limit 1000000 offset 0) as sa2 on st.service_id = sa2.service_id and
+                st.tag_id = sa2.tag_id and st.tag_code is null
+                inner join provisioning_tag pt
+                on st.tag_id = pt.id
+                set st.tag_code = pt.tag_code
+            where st.tag_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-88-2" author="j.lethiec">
+        <comment>Populate service_tag.tag_code with related provisioning tag - second million
+        </comment>
+        <sql>
+            update service_tag st
+                inner join (select service_id, tag_id
+                from service_tag st2
+                order by service_id, tag_id
+                limit 1000000 offset 1000000) as sa2 on st.service_id = sa2.service_id and
+                st.tag_id = sa2.tag_id and st.tag_code is null
+                inner join provisioning_tag pt
+                on st.tag_id = pt.id
+                set st.tag_code = pt.tag_code
+            where st.tag_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-88-3" author="j.lethiec">
+        <comment>Populate service_tag.tag_code with related provisioning tag - third million
+        </comment>
+        <sql>
+            update service_tag st
+                inner join (select service_id, tag_id
+                from service_tag st2
+                order by service_id, tag_id
+                limit 1000000 offset 2000000) as sa2 on st.service_id = sa2.service_id and
+                st.tag_id = sa2.tag_id and st.tag_code is null
+                inner join provisioning_tag pt
+                on st.tag_id = pt.id
+                set st.tag_code = pt.tag_code
+            where st.tag_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-88-4" author="j.lethiec">
+        <comment>Populate service_tag.tag_code with related provisioning tag - fourth million
+        </comment>
+        <sql>
+            update service_tag st
+                inner join (select service_id, tag_id
+                from service_tag st2
+                order by service_id, tag_id
+                limit 1000000 offset 3000000) as sa2 on st.service_id = sa2.service_id and
+                st.tag_id = sa2.tag_id and st.tag_code is null
+                inner join provisioning_tag pt
+                on st.tag_id = pt.id
+                set st.tag_code = pt.tag_code
+            where st.tag_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-88-5" author="j.lethiec">
+        <comment>Populate service_tag.tag_code with related provisioning tag - fifth million
+        </comment>
+        <sql>
+            update service_tag st
+                inner join (select service_id, tag_id
+                from service_tag st2
+                order by service_id, tag_id
+                limit 1000000 offset 4000000) as sa2 on st.service_id = sa2.service_id and
+                st.tag_id = sa2.tag_id and st.tag_code is null
+                inner join provisioning_tag pt
+                on st.tag_id = pt.id
+                set st.tag_code = pt.tag_code
+            where st.tag_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-88-6" author="j.lethiec">
+        <comment>Populate service_tag.tag_code with related provisioning tag - sixth million
+        </comment>
+        <sql>
+            update service_tag st
+                inner join (select service_id, tag_id
+                from service_tag st2
+                order by service_id, tag_id
+                limit 1000000 offset 5000000) as sa2 on st.service_id = sa2.service_id and
+                st.tag_id = sa2.tag_id and st.tag_code is null
+                inner join provisioning_tag pt
+                on st.tag_id = pt.id
+                set st.tag_code = pt.tag_code
+            where st.tag_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-88-7" author="j.lethiec">
+        <comment>Populate service_tag.tag_code with related provisioning tag - seventh million
+        </comment>
+        <sql>
+            update service_tag st
+                inner join (select service_id, tag_id
+                from service_tag st2
+                order by service_id, tag_id
+                limit 1000000 offset 6000000) as sa2 on st.service_id = sa2.service_id and
+                st.tag_id = sa2.tag_id and st.tag_code is null
+                inner join provisioning_tag pt
+                on st.tag_id = pt.id
+                set st.tag_code = pt.tag_code
+            where st.tag_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-88-8" author="j.lethiec">
+        <comment>Populate service_tag.tag_code with related provisioning tag - eigth million
+        </comment>
+        <sql>
+            update service_tag st
+                inner join (select service_id, tag_id
+                from service_tag st2
+                order by service_id, tag_id
+                limit 1000000 offset 7000000) as sa2 on st.service_id = sa2.service_id and
+                st.tag_id = sa2.tag_id and st.tag_code is null
+                inner join provisioning_tag pt
+                on st.tag_id = pt.id
+                set st.tag_code = pt.tag_code
+            where st.tag_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-88-9" author="j.lethiec">
+        <comment>Populate service_tag.tag_code with related provisioning tag - ninth million
+        </comment>
+        <sql>
+            update service_tag st
+                inner join (select service_id, tag_id
+                from service_tag st2
+                order by service_id, tag_id
+                limit 1000000 offset 8000000) as sa2 on st.service_id = sa2.service_id and
+                st.tag_id = sa2.tag_id and st.tag_code is null
+                inner join provisioning_tag pt
+                on st.tag_id = pt.id
+                set st.tag_code = pt.tag_code
+            where st.tag_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-88-10" author="j.lethiec">
+        <comment>Populate service_tag.tag_code with related provisioning tag - tenth million
+        </comment>
+        <sql>
+            update service_tag st
+                inner join (select service_id, tag_id
+                from service_tag st2
+                order by service_id, tag_id
+                limit 1000000 offset 9000000) as sa2 on st.service_id = sa2.service_id and
+                st.tag_id = sa2.tag_id and st.tag_code is null
+                inner join provisioning_tag pt
+                on st.tag_id = pt.id
+                set st.tag_code = pt.tag_code
+            where st.tag_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-89" author="j.lethiec">
+        <addNotNullConstraint tableName="service_tag" columnName="tag_code"
+                              columnDataType="varchar(255)"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-90" author="j.lethiec">
+        <addForeignKeyConstraint baseTableName="service_tag" baseColumnNames="tag_code"
+                                 referencedTableName="provisioning_tag" referencedColumnNames="tag_code"
+                                 constraintName="fk_service_tag_provisioning_tag"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-91" author="j.lethiec">
+        <dropForeignKeyConstraint baseTableName="service_tag" constraintName="fk_service_tag_provisioningtag_id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-92" author="j.lethiec">
+        <preConditions onFail="MARK_RAN">
+            <indexExists tableName="service_tag" indexName="fk_service_tag_provisioningtag_id"/>
+        </preConditions>
+
+        <dropIndex tableName="service_tag" indexName="fk_service_tag_provisioningtag_id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-93" author="j.lethiec">
+        <createIndex tableName="service_tag" indexName="service_id">
+            <column name="service_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-94" author="j.lethiec">
+        <dropPrimaryKey tableName="service_tag"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-95" author="j.lethiec">
+        <addPrimaryKey tableName="service_tag"
+                       columnNames="service_id,tag_code"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-95-1" author="j.lethiec">
+        <preConditions onFail="MARK_RAN">
+            <indexExists tableName="service_tag" indexName="fk-uniqueconstraint-service-tag"/>
+        </preConditions>
+
+        <dropIndex tableName="service_tag" indexName="fk-uniqueconstraint-service-tag"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-96" author="j.lethiec">
+        <dropColumn tableName="service_tag"
+                    columnName="tag_id"/>
+    </changeSet>
+
+    <!-- Migrate Tag Activation -> Activation Code + Provisioning Tag relationships -->
+
+    <changeSet id="MTOSS-831-97" author="j.lethiec">
+        <addColumn tableName="tag_activation">
+            <column name="activ_code" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-98" author="j.lethiec">
+        <comment>Populate tag_activation.activ_code with related activation code
+        </comment>
+        <sql>
+            update tag_activation ta
+                inner join activation_code ac
+            on ta.activation_code_id = ac.id
+                set ta.activ_code = ac.activ_code
+            where ta.activ_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-99" author="j.lethiec">
+        <addNotNullConstraint tableName="tag_activation" columnName="activ_code"
+                              columnDataType="varchar(255)"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-100" author="j.lethiec">
+        <addForeignKeyConstraint baseTableName="tag_activation" baseColumnNames="activ_code"
+                                 referencedTableName="activation_code" referencedColumnNames="activ_code"
+                                 constraintName="fk_tag_activation_activation_code"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-101" author="j.lethiec">
+        <dropForeignKeyConstraint baseTableName="tag_activation" constraintName="fk_tag_activation_activation_code_id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-102" author="j.lethiec">
+        <dropIndex tableName="tag_activation" indexName="fk_tag_activation_activation_code_id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-103" author="j.lethiec">
+        <addColumn tableName="tag_activation">
+            <column name="tag_code" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-104" author="j.lethiec">
+        <comment>Populate tag_activation.tag_code with related provisioning tag
+        </comment>
+        <sql>
+            update tag_activation ta
+                inner join provisioning_tag pt
+            on ta.provisioning_tag_id = pt.id
+                set ta.tag_code = pt.tag_code
+            where ta.tag_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-105" author="j.lethiec">
+        <addNotNullConstraint tableName="tag_activation" columnName="tag_code"
+                              columnDataType="varchar(255)"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-106" author="j.lethiec">
+        <addForeignKeyConstraint baseTableName="tag_activation" baseColumnNames="tag_code"
+                                 referencedTableName="provisioning_tag" referencedColumnNames="tag_code"
+                                 constraintName="fk_tag_activation_provisioning_tag"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-107" author="j.lethiec">
+        <dropForeignKeyConstraint baseTableName="tag_activation" constraintName="fk_tag_activation_provisioning_tag_id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-108" author="j.lethiec">
+        <dropPrimaryKey tableName="tag_activation"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-109" author="j.lethiec">
+        <addPrimaryKey tableName="tag_activation"
+                       columnNames="tag_code,activ_code"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-110" author="j.lethiec">
+        <dropColumn tableName="tag_activation"
+                    columnName="activation_code_id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-111" author="j.lethiec">
+        <dropColumn tableName="tag_activation"
+                    columnName="provisioning_tag_id"/>
+    </changeSet>
+
+    <!-- Migrate Parent Provisioning Tag relationship -->
+
+    <changeSet id="MTOSS-831-112" author="j.lethiec">
+        <addColumn tableName="provisioning_tag">
+            <column name="parent_tag_code" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-113" author="j.lethiec">
+        <comment>Populate provisioning_tag.parent_tag_code with related provisioning tag
+        </comment>
+        <sql>
+            update provisioning_tag child
+                inner join provisioning_tag parent
+            on child.parent_tag_code_id = parent.id
+                set child.parent_tag_code = parent.tag_code
+            where child.parent_tag_code is null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-114" author="j.lethiec">
+        <addForeignKeyConstraint baseTableName="provisioning_tag" baseColumnNames="parent_tag_code"
+                                 referencedTableName="provisioning_tag" referencedColumnNames="tag_code"
+                                 constraintName="fk_provisioning_tag_parent"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-115" author="j.lethiec">
+        <dropForeignKeyConstraint baseTableName="provisioning_tag" constraintName="fk_provisioning_tag_parent_tag_code"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-116" author="j.lethiec">
+        <dropColumn tableName="provisioning_tag"
+                    columnName="parent_tag_code_id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-117" author="j.lethiec">
+        <addNotNullConstraint tableName="provisioning_tag" columnName="activity" columnDataType="enum('MOBILE', 'INTERNET', 'TV', 'TELEPHONY', 'SIP', 'NDD', 'MAILPRO', 'MAIL', 'WIFI', 'VOIP', 'MEVO', 'OX')"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-831-118" author="j.lethiec">
+        <addNotNullConstraint tableName="provisioning_tag" columnName="nature" columnDataType="enum('A', 'C', 'P', 'O', 'E', 'R', 'U')"/>
+    </changeSet>
+
+    <!-- Remove foreign key constraint between service and tags/activations -->
+
+    <changeSet id="MTOSS-832-1" author="j.lethiec">
+        <dropForeignKeyConstraint baseTableName="service_tag" constraintName="fk_service_tag_provisioning_tag"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-832-2" author="j.lethiec">
+        <dropForeignKeyConstraint baseTableName="service_activation" constraintName="fk_service_activation_activation_code"/>
+    </changeSet>
+
+    <!-- new job to clean data -->
+
+    <changeSet id="MTOSS-861-1" author="j.lethiec">
+        <!-- Created table job_history-->
+        <createTable tableName="job_history">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="start" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end" type="TIMESTAMP"/>
+            <column name="status" type="enum('STARTED','COMPLETED','FAILED')"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="MTOSS-861-2" author="j.lethiec">
+        <!-- Created table job_configuration-->
+        <createTable tableName="job_configuration">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="days" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="bit">
+                <constraints nullable="false"/>
+            </column>
+            <column name="operation" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="enum('PENDING', 'ACTIVATED', 'DEACTIVATED', 'SUSPENDED', 'CANCELED', 'BARRED')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="enum('ACCESS', 'COMPONENT')"/>
+            <column name="activity" type="enum('MOBILE', 'INTERNET', 'SIP', 'TV', 'NDD', 'MAILPRO', 'MAIL', 'WIFI', 'VOIP', 'MEVO', 'TELEPHONY')"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

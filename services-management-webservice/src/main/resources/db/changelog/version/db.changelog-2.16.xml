@@ -1,0 +1,321 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="GI-768-1" author="g.fantappie">
+        <!-- Remove crm_service/activity key -->
+        <dropUniqueConstraint tableName="service"
+                              constraintName="composite_key_service_service_activity_crm_service_id"/>
+    </changeSet>
+
+    <changeSet id="GI-768-2" author="g.fantappie">
+        <!-- Add service_category to crm_service/activity key -->
+        <addUniqueConstraint tableName="service"
+                             columnNames="service_activity, crm_service_id, service_category"
+                             constraintName="composite_crm_service_activity_category"/>
+    </changeSet>
+
+    <changeSet id="GI-766-1" author="g.fantappie">
+        <!-- Added Primary key to service_access table -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="service_access"/>
+            </not>
+        </preConditions>
+
+        <addPrimaryKey tableName="service_access" columnNames="id"/>
+    </changeSet>
+
+
+    <changeSet id="GI-766-2" author="g.fantappie">
+        <!-- Added Primary key to service_component table -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="service_component"/>
+            </not>
+        </preConditions>
+
+        <addPrimaryKey tableName="service_component" columnNames="id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-3" author="g.fantappie">
+        <!-- Drop foreign key service_activation -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="service_activations"/>
+            </not>
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="service_activations" constraintName="fk_service_activations_service_id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-4" author="g.fantappie">
+        <!-- Drop foreign key service_activation -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="service_activations"/>
+            </not>
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="service_activations" constraintName="fk_service_activations_activ_id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-5" author="g.fantappie">
+        <!-- Drop unique constraint service_activation -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="service_activations"/>
+            </not>
+        </preConditions>
+
+        <dropUniqueConstraint tableName="service_activations" constraintName="fk-uniqueconstraint-service-activations"/>
+    </changeSet>
+
+    <changeSet id="GI-766-6" author="g.fantappie">
+        <!-- Add primary key service_activation -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="service_activations"/>
+            </not>
+        </preConditions>
+
+        <addPrimaryKey tableName="service_activations" columnNames="service_id, activ_id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-7" author="g.fantappie">
+        <!-- Re add foreign constraint  service_activation -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_service_activations_service_id"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint baseTableName="service_activations" constraintName="fk_service_activations_service_id" baseColumnNames="service_id"
+                                 referencedTableName="service" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-8" author="g.fantappie">
+        <!-- Re add foreign constraint service_activation -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_service_activations_activ_id"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint baseTableName="service_activations" constraintName="fk_service_activations_activ_id" baseColumnNames="activ_id"
+                                 referencedTableName="activation_code" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-9" author="g.fantappie">
+        <!-- Drop foreign key service_tag -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="service_tag"/>
+            </not>
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="service_tag" constraintName="fk_service_tag_service_id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-10" author="g.fantappie">
+        <!-- Drop foreign key service_tag -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="service_tag"/>
+            </not>
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="service_tag" constraintName="fk_service_tag_provisioningtag_id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-11" author="g.fantappie">
+        <!-- Drop unique constraint service_tag -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="service_tag"/>
+            </not>
+        </preConditions>
+
+        <dropUniqueConstraint tableName="service_tag" constraintName="fk-uniqueconstraint-service-tag"/>
+    </changeSet>
+
+    <changeSet id="GI-766-12" author="g.fantappie">
+        <!-- Add primary key service_tag -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="service_tag"/>
+            </not>
+        </preConditions>
+
+        <addPrimaryKey tableName="service_tag" columnNames="service_id, tag_id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-13" author="g.fantappie">
+        <!-- Re add foreign constraints service_tag -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_service_tag_service_id"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint baseTableName="service_tag" constraintName="fk_service_tag_service_id" baseColumnNames="service_id"
+                                 referencedTableName="service" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-14" author="g.fantappie">
+        <!-- Re add foreign constraints service_tag -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_service_tag_provisioningtag_id"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint baseTableName="service_tag" constraintName="fk_service_tag_provisioningtag_id" baseColumnNames="tag_id"
+                                 referencedTableName="provisioning_tag" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-15" author="g.fantappie">
+        <!-- Drop foreign key tag_activation -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="tag_activation"/>
+            </not>
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="tag_activation" constraintName="fk_tag_activation_activation_code_id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-16" author="g.fantappie">
+        <!-- Drop foreign key tag_activation -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="tag_activation"/>
+            </not>
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="tag_activation" constraintName="fk_tag_activation_provisioning_tag_id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-17" author="g.fantappie">
+        <!-- Add primary key tag_activation -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="tag_activation"/>
+            </not>
+        </preConditions>
+
+        <addPrimaryKey tableName="tag_activation" columnNames="provisioning_tag_id, activation_code_id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-18" author="g.fantappie">
+        <!-- Re add foreign constraints tag_activation -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_tag_activation_provisioning_tag_id"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint baseTableName="tag_activation" constraintName="fk_tag_activation_provisioning_tag_id" baseColumnNames="provisioning_tag_id"
+                                 referencedTableName="provisioning_tag" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-19" author="g.fantappie">
+        <!-- Re add foreign constraints tag_activation -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_tag_activation_activation_code_id"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint baseTableName="tag_activation" constraintName="fk_tag_activation_activation_code_id" baseColumnNames="activation_code_id"
+                                 referencedTableName="activation_code" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-20" author="g.fantappie">
+        <!-- Drop foreign key service_activation -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="provisioning_action_parameter"/>
+            </not>
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="provisioning_action_parameter" constraintName="fk_tag_parameter_provisioning_action_id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-21" author="g.fantappie">
+        <!-- Drop foreign key provisioning_action_parameter -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="provisioning_action_parameter"/>
+            </not>
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="provisioning_action_parameter" constraintName="fk_tag_parameter_technical_parameter_id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-22" author="g.fantappie">
+        <!-- Drop unique constraint provisioning_action_parameter -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="provisioning_action_parameter"/>
+            </not>
+        </preConditions>
+
+        <dropIndex tableName="provisioning_action_parameter" indexName="composite_key_pap_action_id_technical_parameter_id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-23" author="g.fantappie">
+        <!-- Add primary key provisioning_action_parameter -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="provisioning_action_parameter"/>
+            </not>
+        </preConditions>
+
+        <addPrimaryKey tableName="provisioning_action_parameter" columnNames="provisioning_action_id, technical_parameter_id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-24" author="g.fantappie">
+        <!-- Re add foreign constraint  provisioning_action_parameter -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_tag_parameter_technical_parameter_id"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint baseTableName="provisioning_action_parameter" constraintName="fk_tag_parameter_technical_parameter_id" baseColumnNames="technical_parameter_id"
+                                 referencedTableName="technical_parameter" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="GI-766-25" author="g.fantappie">
+        <!-- Re add foreign constraint provisioning_action_parameter -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_tag_parameter_provisioning_action_id"/>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint baseTableName="provisioning_action_parameter" constraintName="fk_tag_parameter_provisioning_action_id" baseColumnNames="provisioning_action_id"
+                                 referencedTableName="provisioning_action" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-1251-1" author="j.lethiec">
+        <!-- Increase size of tag codes to 255 -->
+        <modifyDataType columnName="tag_code" newDataType="varchar(255)" tableName="provisioning_tag"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-1251-2" author="j.lethiec">
+        <!-- Increase size of tag codes to 255 -->
+        <modifyDataType columnName="tag_code" newDataType="varchar(255)" tableName="provisioning_tag_aud"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-1251-3" author="j.lethiec">
+        <!-- Increase size of activ codes to 255 -->
+        <modifyDataType columnName="activ_code" newDataType="varchar(255)" tableName="activation_code"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-1251-4" author="j.lethiec">
+        <!-- Increase size of activ codes to 255 -->
+        <modifyDataType columnName="activ_code" newDataType="varchar(255)" tableName="activation_code_aud"/>
+    </changeSet>
+</databaseChangeLog>

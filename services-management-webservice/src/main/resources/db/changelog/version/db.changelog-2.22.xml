@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+
+    <!-- Modificar access_type en la tabla equipment -->
+    <changeSet id="modify-equipment-access-type-enum" author="fmarchena">
+        <modifyDataType tableName="service_access"
+                        columnName="access_type"
+                        newDataType="ENUM('DOCSIS','EMTA','FTTH','FIREWALL','STB_HD','STB_ANDROID','STB_STICKTV','STB_ONT',
+                                          'STB_DTH','EXTENSOR_WIFI','EXTENSOR_WIFI_PLUS','EXTENSOR_WIFI_B2B',
+                                          'ALARMS','CENTRAL_TELEFONICA','SONDAS_DE_MONITOREO','BBHB','MOBILE','FREEDHOME')" />
+    </changeSet>
+
+    <!-- Modificar access_type en la tabla provisioning_tag -->
+    <changeSet id="modify-provisioning_tag-access-type-enum" author="tu_nombre">
+        <modifyDataType tableName="provisioning_tag"
+                        columnName="access_type"
+                        newDataType="ENUM('DOCSIS','EMTA','FTTH','FIREWALL','STB_HD','STB_ANDROID','STB_STICKTV','STB_ONT',
+                                          'STB_DTH','EXTENSOR_WIFI','EXTENSOR_WIFI_PLUS','EXTENSOR_WIFI_B2B',
+                                          'ALARMS','CENTRAL_TELEFONICA','SONDAS_DE_MONITOREO','BBHB','MOBILE','FREEDHOME')" />
+    </changeSet>
+
+</databaseChangeLog>

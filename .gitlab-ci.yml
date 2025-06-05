@@ -1,0 +1,18 @@
+include:
+  - project: 'mtmc/projects/it-factory/piplib'
+    ref: develop
+    file: '/pipelines/maven-deploy/epicCY-ci-galaxion-epic.gitlab-ci.yml'
+  - project: 'mtmc/projects/it-factory/piplib'
+    ref: develop
+    file: '/pipelines/maven-deploy/mtMC-ci-itinternal.gitlab-ci.yml'
+  - project: 'mtmc/projects/it-factory/piplib'
+    ref: develop
+    file: '/pipelines/workflows/gitflow.gitlab-ci.yml'
+  - project: 'mtmc/projects/it-factory/piplib'
+    ref: develop
+    file: '/pipelines/maven.gitlab-ci.yml'
+
+variables:
+  PROJECT_CONTAINER: "true"
+  PROJECT_CORE: "true"
+  PUSH_TO_ITSF: "true"

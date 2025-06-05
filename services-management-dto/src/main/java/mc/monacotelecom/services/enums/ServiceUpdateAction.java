@@ -1,0 +1,31 @@
+package mc.monacotelecom.services.enums;
+
+public enum ServiceUpdateAction {
+    addParent,
+    changeParent,
+    removeParent,
+    addAccess,
+    changeAccess,
+    removeAccess,
+    addEqt,
+    changeEqt,
+    removeEqt,
+    addNumber,
+    changeNumber,
+    removeNumber,
+    addAccPoint,
+    changeAccPoint,
+    removeAccPoint,
+    addCrmRef,
+    changeCrmRef,
+    removeCrmRef,
+    addRange,
+    changeRange,
+    removeRange,
+    addOntId,
+    changeOntId,
+    removeOntId,
+    addTechId,
+    changeTechId,
+    removeTechId
+}

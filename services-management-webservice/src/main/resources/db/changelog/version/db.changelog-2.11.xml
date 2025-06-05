@@ -1,0 +1,15 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="GOSS-1315-1" author="g.fantappie">
+        <!-- Add value TRUNKSIP, and removed CAS, CONNECTIVITY in service_access table -->
+        <modifyDataType tableName="service_access" columnName="access_type" newDataType="enum('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'TRUNKSIP', 'BBHB', 'PREPAY', 'MOBILE')"/>
+    </changeSet>
+
+    <changeSet id="GOSS-1315-2" author="g.fantappie">
+        <!-- Removed value TRUNKSIP from table service_component  -->
+        <modifyDataType tableName="service_component" columnName="component_type" newDataType="enum('CLOUDCALLING')"/>
+    </changeSet>
+</databaseChangeLog>

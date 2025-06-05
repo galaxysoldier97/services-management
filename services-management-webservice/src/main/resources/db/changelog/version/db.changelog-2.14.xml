@@ -1,0 +1,71 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="GI-656-1" author="g.fantappie">
+        <!--Update value PREPAY to MOBILE -->
+        <update tableName="service_access">
+            <column name="access_type" value="MOBILE" />
+            <where>access_type='PREPAY'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="GI-656-2" author="g.fantappie">
+        <!-- Removed value PREPAY from access_service enum-->
+        <modifyDataType tableName="service_access" columnName="access_type" newDataType="enum('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'TRUNKSIP','BBHB','MOBILE')"/>
+    </changeSet>
+
+    <changeSet id="GI-656-3" author="g.fantappie">
+        <!--Update value PREPAY to MOBILE for aud table -->
+        <update tableName="service_access_aud">
+            <column name="access_type" value="MOBILE" />
+            <where>access_type='PREPAY'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="GI-656-4" author="j.lethiec">
+        <!-- Update value PREPAY to MOBILE in provisioning_tag -->
+        <update tableName="provisioning_tag">
+            <column name="access_type" value="MOBILE" />
+            <where>access_type='PREPAY'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="GI-656-5" author="j.lethiec">
+        <!-- Removed value PREPAY from access_type enum in provisioning_tag -->
+        <modifyDataType tableName="provisioning_tag" columnName="access_type" newDataType="enum('DOCSIS', 'FTTH', 'DISE', 'FREEDHOME', 'ZATTOO', 'TRUNKSIP', 'BBHB', 'MOBILE')"/>
+    </changeSet>
+
+    <changeSet id="GI-656-6" author="j.lethiec">
+        <!--Update value PREPAY to MOBILE for aud table -->
+        <update tableName="provisioning_tag_aud">
+            <column name="access_type" value="MOBILE" />
+            <where>access_type='PREPAY'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="GI-707-1" author="g.fantappie">
+        <!-- Added value CHGE_OFFER to Service Action-->
+        <modifyDataType tableName="service" columnName="action_request" newDataType="enum('ACTIVATION', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'BARRING', 'UNBARRING', 'DEACTIVATION', 'RESUM_OPER', 'CHGE_OFFER')"/>
+    </changeSet>
+
+    <changeSet id="GI-707-2" author="g.fantappie">
+        <!-- Removed value CHGE_OFFER to Service Action-->
+        <modifyDataType tableName="service" columnName="action_request" newDataType="enum('ACTIVATION', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'BARRING', 'UNBARRING', 'DEACTIVATION', 'RESUM_OPER')"/>
+    </changeSet>
+
+    <changeSet id="GI-707-3" author="g.fantappie">
+        <!-- Added value CHGE_OFFER to provisioning_product Action-->
+        <modifyDataType tableName="provisioning_product" columnName="action_request" newDataType="enum('FIRST_ACTIVATION', 'ACTIVATION', 'TRANSITION', 'MIGRATION', 'DEACTIVATION', 'CHGE_NUM', 'CHGE_EQT', 'RETURN_EQT', 'CHGE_ADDR', 'CHGE_CLI', 'BARRING', 'UNBARRING', 'SUSP_CLI', 'RESUM_CLI', 'SUSP_OPER', 'RESUM_OPER', 'RESET_CELL', 'RETURN_ANCIL', 'CHGE_ANCIL', 'TRANSFER', 'ADD_QTY', 'DEL_QTY', 'CHGE_MSISDN', 'CHGE_OFFER')"/>
+    </changeSet>
+
+    <changeSet id="GI-707-4" author="g.fantappie">
+        <!-- Modified provisioning_product_aud.action_request to varchar -->
+        <modifyDataType tableName="provisioning_product_aud" columnName="action_request" newDataType="varchar(32)"/>
+    </changeSet>
+
+    <changeSet id="GI-707-5" author="g.fantappie">
+        <!-- Modified service_aud.action_request to varchar-->
+        <modifyDataType tableName="service_aud" columnName="action_request" newDataType="varchar(32)"/>
+    </changeSet>
+</databaseChangeLog>

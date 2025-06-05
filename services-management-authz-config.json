@@ -1,0 +1,730 @@
+{
+  "allowRemoteResourceManagement": true,
+  "policyEnforcementMode": "ENFORCING",
+  "resources": [
+    {
+      "name": "services",
+      "uris": [
+        "/private/auth/services/*"
+      ],
+      "scopes": [
+        {
+          "name": "services_create"
+        },
+        {
+          "name": "services_read"
+        },
+        {
+          "name": "services_update"
+        },
+        {
+          "name": "services_delete"
+        }
+      ]
+    },
+    {
+      "name": "activationcodes",
+      "uris": [
+        "/private/auth/activationcodes/*"
+      ],
+      "scopes": [
+        {
+          "name": "activationcodes_create"
+        },
+        {
+          "name": "activationcodes_read"
+        },
+        {
+          "name": "activationcodes_update"
+        },
+        {
+          "name": "activationcodes_delete"
+        }
+      ]
+    },
+    {
+      "name": "provisioningtags",
+      "uris": [
+        "/private/auth/provisioningtags/*"
+      ],
+      "scopes": [
+        {
+          "name": "provisioningtags_create"
+        },
+        {
+          "name": "provisioningtags_read"
+        },
+        {
+          "name": "provisioningtags_update"
+        },
+        {
+          "name": "provisioningtags_delete"
+        }
+      ]
+    },
+    {
+      "name": "technicalparameters",
+      "uris": [
+        "/private/auth/technicalparameters/*"
+      ],
+      "scopes": [
+        {
+          "name": "technicalparameters_create"
+        },
+        {
+          "name": "technicalparameters_read"
+        },
+        {
+          "name": "technicalparameters_update"
+        },
+        {
+          "name": "technicalparameters_delete"
+        }
+      ]
+    },
+    {
+      "name": "provisioningactions",
+      "uris": [
+        "/private/auth/provisioningactions/*"
+      ],
+      "scopes": [
+        {
+          "name": "provisioningactions_create"
+        },
+        {
+          "name": "provisioningactions_read"
+        },
+        {
+          "name": "provisioningactions_update"
+        },
+        {
+          "name": "provisioningactions_delete"
+        }
+      ]
+    },
+    {
+      "name": "tagactivationcodes",
+      "uris": [
+        "/private/auth/tagactivationcodes/*"
+      ],
+      "scopes": [
+        {
+          "name": "tagactivationcodes_create"
+        },
+        {
+          "name": "tagactivationcodes_read"
+        },
+        {
+          "name": "tagactivationcodes_update"
+        },
+        {
+          "name": "tagactivationcodes_delete"
+        }
+      ]
+    },
+    {
+      "name": "tagparametervalues",
+      "uris": [
+        "/private/auth/tagparametervalues/*"
+      ],
+      "scopes": [
+        {
+          "name": "tagparametervalues_create"
+        },
+        {
+          "name": "tagparametervalues_read"
+        },
+        {
+          "name": "tagparametervalues_update"
+        },
+        {
+          "name": "tagparametervalues_delete"
+        }
+      ]
+    },
+    {
+      "name": "dashboard",
+      "uris": [
+        "/private/auth/servicesDashboard"
+      ],
+      "scopes": [
+        {
+          "name": "dashboard_read"
+        }
+      ]
+    },
+    {
+      "name": "importers",
+      "uris": [
+        "/private/auth/import/*"
+      ],
+      "scopes": [
+        {
+          "name": "import_read"
+        },
+        {
+          "name": "import_write"
+        },
+        {
+          "name": "import_delete"
+        }
+      ]
+    },
+    {
+      "name": "job",
+      "uris": [
+        "/api/v1/private/auth/job/*"
+      ],
+      "scopes": [
+        {
+          "name": "job_create"
+        },
+        {
+          "name": "job_read"
+        },
+        {
+          "name": "job_update"
+        },
+        {
+          "name": "job_delete"
+        }
+      ]
+    }
+  ],
+  "policies": [
+    {
+      "name": "has_read_role",
+      "type": "role",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "roles": "[{\"id\":\"services-management/SERVICE_READ\",\"required\":true}]"
+      }
+    },
+    {
+      "name": "has_write_role",
+      "type": "role",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "roles": "[{\"id\":\"services-management/SERVICE_WRITE\",\"required\":true}]"
+      }
+    },
+    {
+      "name": "has_delete_role",
+      "type": "role",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "roles": "[{\"id\":\"services-management/SERVICE_DELETE\",\"required\":true}]"
+      }
+    },
+    {
+      "name": "can_create_services",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"services\"]",
+        "scopes": "[\"services_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_services",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"services\"]",
+        "scopes": "[\"services_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_services",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"services\"]",
+        "scopes": "[\"services_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_services",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"services\"]",
+        "scopes": "[\"services_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_activationcodes",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"activationcodes\"]",
+        "scopes": "[\"activationcodes_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_activationcodes",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"activationcodes\"]",
+        "scopes": "[\"activationcodes_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_activationcodes",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"activationcodes\"]",
+        "scopes": "[\"activationcodes_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_activationcodes",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"activationcodes\"]",
+        "scopes": "[\"activationcodes_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_provisioningtags",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"provisioningtags\"]",
+        "scopes": "[\"provisioningtags_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_provisioningtags",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"provisioningtags\"]",
+        "scopes": "[\"provisioningtags_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_provisioningtags",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"provisioningtags\"]",
+        "scopes": "[\"provisioningtags_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_provisioningtags",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"provisioningtags\"]",
+        "scopes": "[\"provisioningtags_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_technicalparameters",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"technicalparameters\"]",
+        "scopes": "[\"technicalparameters_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_technicalparameters",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"technicalparameters\"]",
+        "scopes": "[\"technicalparameters_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_technicalparameters",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"technicalparameters\"]",
+        "scopes": "[\"technicalparameters_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_technicalparameters",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"technicalparameters\"]",
+        "scopes": "[\"technicalparameters_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_provisioningactions",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"provisioningactions\"]",
+        "scopes": "[\"provisioningactions_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_provisioningactions",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"provisioningactions\"]",
+        "scopes": "[\"provisioningactions_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_provisioningactions",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"provisioningactions\"]",
+        "scopes": "[\"provisioningactions_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_provisioningactions",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"provisioningactions\"]",
+        "scopes": "[\"provisioningactions_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_tagactivationcodes",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"tagactivationcodes\"]",
+        "scopes": "[\"tagactivationcodes_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_tagactivationcodes",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"tagactivationcodes\"]",
+        "scopes": "[\"tagactivationcodes_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_tagactivationcodes",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"tagactivationcodes\"]",
+        "scopes": "[\"tagactivationcodes_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_tagactivationcodes",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"tagactivationcodes\"]",
+        "scopes": "[\"tagactivationcodes_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_tagparametervalues",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"tagparametervalues\"]",
+        "scopes": "[\"tagparametervalues_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_tagparametervalues",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"tagparametervalues\"]",
+        "scopes": "[\"tagparametervalues_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_tagparametervalues",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"tagparametervalues\"]",
+        "scopes": "[\"tagparametervalues_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_tagparametervalues",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"tagparametervalues\"]",
+        "scopes": "[\"tagparametervalues_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_read_dashboard",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"dashboard\"]",
+        "scopes": "[\"dashboard_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_read_importers",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"importers\"]",
+        "scopes": "[\"import_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_write_importers",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"importers\"]",
+        "scopes": "[\"import_write\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_importers",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"importers\"]",
+        "scopes": "[\"import_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    },
+    {
+      "name": "can_create_job",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"job\"]",
+        "scopes": "[\"job_create\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_read_job",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"job\"]",
+        "scopes": "[\"job_read\"]",
+        "applyPolicies": "[\"has_read_role\"]"
+      }
+    },
+    {
+      "name": "can_update_job",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"job\"]",
+        "scopes": "[\"job_update\"]",
+        "applyPolicies": "[\"has_write_role\"]"
+      }
+    },
+    {
+      "name": "can_delete_job",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "resources": "[\"job\"]",
+        "scopes": "[\"job_delete\"]",
+        "applyPolicies": "[\"has_delete_role\"]"
+      }
+    }
+  ],
+  "scopes": [
+    {
+      "name": "services_create"
+    },
+    {
+      "name": "services_read"
+    },
+    {
+      "name": "services_update"
+    },
+    {
+      "name": "services_delete"
+    },
+    {
+      "name": "activationcodes_create"
+    },
+    {
+      "name": "activationcodes_read"
+    },
+    {
+      "name": "activationcodes_update"
+    },
+    {
+      "name": "activationcodes_delete"
+    },
+    {
+      "name": "provisioningtags_create"
+    },
+    {
+      "name": "provisioningtags_read"
+    },
+    {
+      "name": "provisioningtags_update"
+    },
+    {
+      "name": "provisioningtags_delete"
+    },
+    {
+      "name": "technicalparameters_create"
+    },
+    {
+      "name": "technicalparameters_read"
+    },
+    {
+      "name": "technicalparameters_update"
+    },
+    {
+      "name": "technicalparameters_delete"
+    },
+    {
+      "name": "provisioningactions_create"
+    },
+    {
+      "name": "provisioningactions_read"
+    },
+    {
+      "name": "provisioningactions_update"
+    },
+    {
+      "name": "provisioningactions_delete"
+    },
+    {
+      "name": "tagactivationcodes_create"
+    },
+    {
+      "name": "tagactivationcodes_read"
+    },
+    {
+      "name": "tagactivationcodes_update"
+    },
+    {
+      "name": "tagactivationcodes_delete"
+    },
+    {
+      "name": "tagparametervalues_create"
+    },
+    {
+      "name": "tagparametervalues_read"
+    },
+    {
+      "name": "tagparametervalues_update"
+    },
+    {
+      "name": "tagparametervalues_delete"
+    },
+    {
+      "name": "dashboard_read"
+    },
+    {
+      "name": "import_read"
+    },
+    {
+      "name": "import_read"
+    },
+    {
+      "name": "import_delete"
+    },
+    {
+      "name": "job_create"
+    },
+    {
+      "name": "job_read"
+    },
+    {
+      "name": "job_update"
+    },
+    {
+      "name": "job_delete"
+    }
+  ],
+  "decisionStrategy": "UNANIMOUS"
+}

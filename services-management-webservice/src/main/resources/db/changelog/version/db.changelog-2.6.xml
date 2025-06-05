@@ -1,0 +1,94 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet author="j.lethiec" id="GOSS-550-1">
+        <!-- Modify tech_id column on service_access and service_component -->
+        <modifyDataType columnName="tech_id" tableName="service_access" newDataType="varchar(40)"/>
+        <modifyDataType columnName="tech_id" tableName="service_component" newDataType="varchar(40)"/>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GOSS-550-2">
+        <!-- Modify tech_id column on service_access_aud and service_component_aud -->
+        <modifyDataType columnName="tech_id" tableName="service_access_aud" newDataType="varchar(40)"/>
+        <modifyDataType columnName="tech_id" tableName="service_component_aud" newDataType="varchar(40)"/>
+    </changeSet>
+
+    <changeSet author="g.fantappie" id="GOSS-461-1">
+        <!-- add serviceParameters table -->
+        <createTable tableName="service_parameters">
+            <column name="technical_parameter_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="technical_parameter_id"
+                             references="technical_parameter(id)"/>
+            </column>
+            <column name="service_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="service_id" references="service(id)"/>
+            </column>
+            <column name="value" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="g.fantappie" id="GOSS-461-2">
+        <!-- adding composite primary key -->
+        <addPrimaryKey columnNames="technical_parameter_id, service_id"
+                       constraintName="service_parameter_key"
+                       tableName="service_parameters"/>
+    </changeSet>
+
+    <changeSet  author="j.lethiec"  id="GOSS-565-1">
+        <!-- Using common audit entity -->
+        <renameTable oldTableName="audit_envers_info" newTableName="auditenversinfo"/>
+    </changeSet>
+
+    <changeSet  author="j.lethiec"  id="GOSS-565-2">
+        <!-- Cleaning unused tables -->
+        <dropTable tableName="tag_parameter"/>
+    </changeSet>
+
+    <changeSet  author="j.lethiec"  id="GOSS-565-3">
+        <!-- Cleaning unused tables -->
+        <dropTable tableName="supplementary_subscription"/>
+    </changeSet>
+
+    <changeSet  author="j.lethiec"  id="GOSS-565-4">
+        <!-- Cleaning unused tables -->
+        <dropTable tableName="supplementary_subscription_aud"/>
+    </changeSet>
+
+    <changeSet  author="j.lethiec"  id="GOSS-565-5">
+        <!-- Cleaning unused tables -->
+        <dropTable tableName="purchased_products"/>
+    </changeSet>
+
+    <changeSet  author="j.lethiec"  id="GOSS-565-6">
+        <!-- Cleaning unused tables -->
+        <dropTable tableName="purchased_products_aud"/>
+    </changeSet>
+
+    <changeSet  author="j.lethiec"  id="GOSS-565-7">
+        <!-- Cleaning unused tables -->
+        <dropTable tableName="subscription"/>
+    </changeSet>
+
+    <changeSet  author="j.lethiec"  id="GOSS-565-8">
+        <!-- Cleaning unused tables -->
+        <dropTable tableName="subscription_aud"/>
+    </changeSet>
+
+    <changeSet  author="j.lethiec"  id="GOSS-565-9">
+        <!-- Cleaning unused tables -->
+        <dropTable tableName="product"/>
+    </changeSet>
+
+    <changeSet  author="j.lethiec"  id="GOSS-565-10">
+        <!-- Cleaning unused tables -->
+        <dropTable tableName="product_aud"/>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GOSS-859-1">
+        <modifyDataType tableName="activation_code" columnName="network_component" newDataType="enum('TVCAS', 'ZATTOO', 'PCRF', 'SPG', 'SCP', 'DISE', 'OLT', 'CS', 'STREAMWIDE', 'SDP')"/>
+    </changeSet>
+</databaseChangeLog>

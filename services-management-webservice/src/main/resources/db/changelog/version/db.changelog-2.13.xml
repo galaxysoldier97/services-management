@@ -1,0 +1,50 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="GI-589-1" author="j.lethiec">
+        <!-- Added CAS value to service_component.componentType -->
+        <modifyDataType tableName="service_component" columnName="component_type" newDataType="enum('CLOUDCALLING', 'CAS')"/>
+    </changeSet>
+
+    <changeSet id="GI-589-2" author="j.lethiec">
+        <!-- Changed service_component_aud.componentType field to String -->
+        <modifyDataType tableName="service_component_aud" columnName="component_type" newDataType="VARCHAR(30)"/>
+    </changeSet>
+    
+    <changeSet id="GI-599-1" author="g.fantappie">
+        <!-- Drop unique constrain on parameter code field -->
+        <preConditions onFail="MARK_RAN">
+            <indexExists tableName="technical_parameter" indexName="parameter_code"/>
+        </preConditions>
+        <dropUniqueConstraint tableName="technical_parameter" constraintName="parameter_code"/>
+    </changeSet>
+
+    <changeSet id="GI-599-2" author="g.fantappie">
+        <!-- Added combined unique constrain over the field parameter_code/parameter_type -->
+        <addUniqueConstraint tableName="technical_parameter" columnNames="parameter_code, parameter_type" constraintName="uniqueParamCodeAndType"/>
+    </changeSet>
+
+    <changeSet id="GI-599-3" author="g.fantappie">
+        <!-- Added not null constrain on parameter code field -->
+        <addNotNullConstraint tableName="technical_parameter" columnName="parameter_code" columnDataType="varchar(30)"/>
+    </changeSet>
+
+    <changeSet id="GI-599-4" author="g.fantappie">
+        <!-- Drop unique constrain on parameter code field -->
+        <preConditions onFail="MARK_RAN">
+            <indexExists tableName="technical_parameter" indexName="UK_pm4nma8ys3mdi0nhw3om3j8bu"/>
+        </preConditions>
+        <dropUniqueConstraint tableName="technical_parameter" constraintName="UK_pm4nma8ys3mdi0nhw3om3j8bu"/>
+    </changeSet>
+
+    <changeSet id="GI-596-1" author="g.fantappie">
+        <!-- Renaming column range_id to main_range_id into service table -->
+        <renameColumn tableName="service" oldColumnName="range_id" newColumnName="main_range_id" columnDataType="bigint(20)"/>
+    </changeSet>
+
+    <changeSet id="GI-596-2" author="g.fantappie">
+        <!-- Renaming column range_id to main_range_id into service table -->
+        <renameColumn tableName="service_aud" oldColumnName="range_id" newColumnName="main_range_id" columnDataType="bigint(20)"/>
+    </changeSet>
+</databaseChangeLog>

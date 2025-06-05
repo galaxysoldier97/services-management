@@ -1,0 +1,9 @@
+producer: tecrep-services-management-service
+consumers:
+    - workflow-engine services connector (GW)
+    - pom (GW)
+    - nif-zuya (GW)
+    - tecrep-monitor (GMU)
+    - inventory-integration (GI)
+    - service-composite (GI)
+    - unm (GI)

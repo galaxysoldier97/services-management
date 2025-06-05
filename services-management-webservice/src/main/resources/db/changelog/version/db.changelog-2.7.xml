@@ -1,0 +1,42 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+
+    <changeSet author="b.nzonlia" id="GOSS-472-1">
+        <dropUniqueConstraint
+                constraintName="unique_key_service_access_equipment_id"
+                tableName="service_access"
+        />
+    </changeSet>
+
+    <changeSet author="b.nzonlia" id="GOSS-472-2">
+        <dropUniqueConstraint
+                constraintName="unique_key_service_access_access_point_id"
+                tableName="service_access"
+        />
+    </changeSet>
+
+    <changeSet author="b.nzonlia" id="GOSS-472-3">
+        <addUniqueConstraint
+                columnNames="equipment_id, access_point_id"
+                constraintName="equipment_id_access_point_id"
+                tableName="service_access"
+        />
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GOSS-855-1">
+        <addColumn tableName="service_access">
+            <column name="ont_id" type="VARCHAR(30)">
+                <constraints nullable="true" unique="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GOSS-855-2">
+        <addColumn tableName="service_access_aud">
+            <column name="ont_id" type="VARCHAR(30)"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

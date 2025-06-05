@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet author="j.lethiec" id="GOSS-193-1">
+        <modifyDataType tableName="provisioning_tag" columnName="description" newDataType="tinytext"/>
+        <modifyDataType tableName="provisioning_tag_aud" columnName="description" newDataType="tinytext"/>
+    </changeSet>
+
+    <changeSet author="j.lethiec" id="GOSS-193-2">
+        <modifyDataType tableName="technical_parameter" columnName="description" newDataType="tinytext"/>
+        <modifyDataType tableName="technical_parameter_aud" columnName="description" newDataType="tinytext"/>
+    </changeSet>
+
+</databaseChangeLog>

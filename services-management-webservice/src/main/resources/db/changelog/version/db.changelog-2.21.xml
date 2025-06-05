@@ -1,0 +1,18 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="MTOSS-1551-1" author="g.fantappie">
+        <dropForeignKeyConstraint constraintName="fk_provisioning_product_parent_provisioning_action" baseTableName="provisioning_product"/>
+    </changeSet>
+    
+    <changeSet id="MTOSS-1551-2" author="g.fantappie">
+        <!-- Removed parent_tag_action from provisioning_product-->
+        <dropColumn tableName="provisioning_product" columnName="parent_tag_action"/>
+    </changeSet>
+
+    <changeSet id="MTOSS-1551-3" author="g.fantappie">
+        <!-- Removed parent_tag_code from provisioning_product-->
+        <dropColumn tableName="provisioning_product" columnName="parent_tag_code"/>
+    </changeSet>
+</databaseChangeLog>

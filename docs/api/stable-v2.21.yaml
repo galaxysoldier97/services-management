@@ -1,0 +1,3362 @@
+swagger: '2.0'
+info:
+  version: 2.20.0
+  title: services-management
+host: localhost:10007
+basePath: /
+tags:
+  - name: ActivationCode API
+    description: Activation Code Controller
+  - name: Enumeration API
+    description: Enum Controller
+  - name: Importer Management
+    description: Importer Controller
+  - name: ProvisioningTag API
+    description: Provisioning Tag Controller
+  - name: Service API
+    description: Service Controller
+  - name: Statistics API
+    description: Stats Controller
+  - name: Tag Activation API
+    description: Tag Activation Controller
+  - name: Technical Parameter API
+    description: Technical Parameter Controller
+paths:
+  /private/auth/activationcodes:
+    get:
+      tags:
+        - ActivationCode API
+      summary: Get all ActivationCodes
+      operationId: getAllActivationCodes
+      produces:
+        - '*/*'
+      parameters:
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: size
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: sort
+          in: query
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PagedModel«ActivationCodeDTO»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - OAuth2: [ ]
+    post:
+      tags:
+        - ActivationCode API
+      summary: Add a ActivationCode
+      operationId: addActivationCode
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: activationCodeDTO
+          description: activationCodeDTO
+          required: true
+          schema:
+            $ref: '#/definitions/ActivationCodeDTOReq'
+      responses:
+        '201':
+          description: ActivationCode created
+          schema:
+            $ref: '#/definitions/ActivationCodeDTORes'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal error
+      security:
+        - OAuth2: [ ]
+  /private/auth/activationcodes/accessType/{accessType}:
+    get:
+      tags:
+        - ActivationCode API
+      summary: Get all ActivationCodes by accessType
+      operationId: getAllActivationCodesByAccessType
+      produces:
+        - '*/*'
+      parameters:
+        - name: accessType
+          in: path
+          description: accessType
+          required: true
+          type: string
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: size
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: sort
+          in: query
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PagedModel«ServiceActivationDTO»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - OAuth2: [ ]
+  /private/auth/activationcodes/search:
+    get:
+      tags:
+        - ActivationCode API
+      summary: Get all ActivationCodes by several criteria
+      operationId: searchActivationCodes
+      produces:
+        - '*/*'
+      parameters:
+        - name: activCode
+          in: query
+          description: Identifer of the activationCode
+          required: false
+          type: string
+        - name: nature
+          in: query
+          description: Nature of the activationCode
+          required: false
+          type: string
+          enum:
+            - BARRING
+            - BOOSTER
+            - BUCKET
+            - CONFIG
+            - FORWARDING
+            - LOCK
+            - OPTION
+            - PROFILE
+        - name: networkComponent
+          in: query
+          description: Network Component of the activationCode
+          required: false
+          type: string
+          enum:
+            - CS
+            - DISE
+            - OLT
+            - OPI
+            - PCRF
+            - SCP
+            - SDP
+            - SPG
+            - STREAMWIDE
+            - TVCAS
+            - ZATTOO
+        - name: page
+          in: query
+          description: Results page you want to retrieve (0..N)
+          required: false
+          type: integer
+          format: int32
+          x-example: 0
+        - name: size
+          in: query
+          description: Number of records per page.
+          required: false
+          type: integer
+          format: int32
+          x-example: 10
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PagedModel«ActivationCodeDTO»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - OAuth2: [ ]
+  /private/auth/activationcodes/techid/{techId}/{accessType}:
+    get:
+      tags:
+        - ActivationCode API
+      summary: Get all ActivationCodes by techId
+      operationId: getAllActivationCodesByTechId
+      produces:
+        - '*/*'
+      parameters:
+        - name: accessType
+          in: path
+          description: accessType
+          required: true
+          type: string
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: size
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: sort
+          in: query
+          required: false
+          type: string
+        - name: techId
+          in: path
+          description: techId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PagedModel«ServiceActivationDTO»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - OAuth2: [ ]
+  /private/auth/activationcodes/{activationCodeId}:
+    put:
+      tags:
+        - ActivationCode API
+      summary: Update a activationCode
+      operationId: updateActivationCode
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: activationCodeDTO
+          description: activationCodeDTO
+          required: true
+          schema:
+            $ref: '#/definitions/ActivationCodeDTOReq'
+        - name: activationCodeId
+          in: path
+          description: activationCodeId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: activationCode updated
+          schema:
+            $ref: '#/definitions/ActivationCodeDTORes'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal error
+      security:
+        - OAuth2: [ ]
+    delete:
+      tags:
+        - ActivationCode API
+      summary: Delete a ActivationCode by activationCodeId
+      operationId: deleteActivationCodeById
+      produces:
+        - '*/*'
+      parameters:
+        - name: activationCodeId
+          in: path
+          description: activationCodeId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: activationCode deleted
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal error
+      security:
+        - OAuth2: [ ]
+  /private/auth/activationcodes/{id}:
+    get:
+      tags:
+        - ActivationCode API
+      summary: Find a ActivationCode by Id
+      operationId: getActivationCodeById
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: ActivationCode found
+          schema:
+            $ref: '#/definitions/ActivationCodeDTORes'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+      security:
+        - OAuth2: [ ]
+  /private/auth/import/history/last:
+    delete:
+      tags:
+        - Importer Management
+      summary: Delete the last import history
+      operationId: deleteLastUsingDELETE
+      produces:
+        - '*/*'
+      responses:
+        '204':
+          description: Import history successfully deleted
+        '400':
+          description: Input error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal processing error
+      security:
+        - OAuth2: [ ]
+  /private/auth/import/history/search:
+    get:
+      tags:
+        - Importer Management
+      summary: Search existing import histories
+      operationId: searchUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: endDate
+          in: query
+          description: Ending date of the searched import
+          required: false
+          type: string
+        - name: fileName
+          in: query
+          description: File name of the searched import
+          required: false
+          type: string
+        - name: page
+          in: query
+          description: Results page you want to retrieve (0..N)
+          required: false
+          type: integer
+          format: int32
+          x-example: 0
+        - name: size
+          in: query
+          description: Number of records per page.
+          required: false
+          type: integer
+          format: int32
+          x-example: 10
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
+          required: false
+          type: string
+        - name: startDate
+          in: query
+          description: Starting date of the searched import
+          required: false
+          type: string
+        - name: status
+          in: query
+          description: Status of the searched import
+          required: false
+          type: string
+          enum:
+            - ABORTED
+            - COMPLETED
+            - STARTED
+      responses:
+        '200':
+          description: Import histories matching the criteria successfully returned
+          schema:
+            $ref: '#/definitions/Page«ImportHistoryDTO»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal processing error
+      security:
+        - OAuth2: [ ]
+  /private/auth/import/history/{id}:
+    get:
+      tags:
+        - Importer Management
+      summary: Get an existing import history by its internal ID
+      operationId: getByIdUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Import history successfully returned
+          schema:
+            $ref: '#/definitions/ImportHistoryDTO'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Import history not found
+        '500':
+          description: Internal processing error
+      security:
+        - OAuth2: [ ]
+  /private/auth/import/{entity}/start:
+    post:
+      tags:
+        - Importer Management
+      summary: Launch a new import
+      operationId: uploadFileHandlerUsingPOST
+      consumes:
+        - multipart/form-data
+      produces:
+        - '*/*'
+      parameters:
+        - name: lastAccessedTime
+          in: formData
+          required: false
+          type: integer
+          format: int64
+        - name: new
+          in: formData
+          required: false
+          type: boolean
+        - name: maxInactiveInterval
+          in: formData
+          required: false
+          type: integer
+          format: int32
+        - name: creationTime
+          in: formData
+          required: false
+          type: integer
+          format: int64
+        - name: valueNames
+          in: formData
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: id
+          in: formData
+          required: false
+          type: string
+        - name: entity
+          in: path
+          description: entity
+          required: true
+          type: string
+        - in: body
+          name: file
+          description: file
+          required: false
+          schema:
+            type: string
+            format: binary
+      responses:
+        '200':
+          description: Import successfully launched
+          schema:
+            $ref: '#/definitions/ImportHistoryDTO'
+        '201':
+          description: Created
+        '400':
+          description: Input error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal processing error
+      security:
+        - OAuth2: [ ]
+  /private/auth/provisioningtags:
+    get:
+      tags:
+        - ProvisioningTag API
+      summary: Get all provisioningtags
+      operationId: getAllProvisioningTags
+      produces:
+        - '*/*'
+      parameters:
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: size
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: sort
+          in: query
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PagedModel«ProvisioningTagDTO»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - OAuth2: [ ]
+    post:
+      tags:
+        - ProvisioningTag API
+      summary: Add a provisioningtag
+      operationId: addProvisioningTag
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: provisioningTagDTO
+          description: provisioningTagDTO
+          required: true
+          schema:
+            $ref: '#/definitions/ProvisioningTagDTOReq'
+      responses:
+        '201':
+          description: provisioningtag created
+          schema:
+            $ref: '#/definitions/ProvisioningTagDTORes'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal error
+      security:
+        - OAuth2: [ ]
+  /private/auth/provisioningtags/decomposeproductsrequest:
+    patch:
+      tags:
+        - ProvisioningTag API
+      summary: decompose products request
+      operationId: decompose
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: provisioningProductRequestsDTO
+          description: provisioningProductRequestsDTO
+          required: true
+          schema:
+            $ref: '#/definitions/ProvisioningProductRequestsDTO'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ProvisioningProductDTO'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        - OAuth2: [ ]
+  /private/auth/provisioningtags/parametersOnActions:
+    post:
+      tags:
+        - ProvisioningTag API
+      summary: Get all ParametersOnAction for a provisioningtag
+      operationId: getAllParametersOnAction
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: parametersOnActionRequestDTO
+          description: parametersOnActionRequestDTO
+          required: true
+          schema:
+            $ref: '#/definitions/ParametersOnActionRequestDTO'
+      responses:
+        '200':
+          description: get All ParametersOnAction
+          schema:
+            $ref: '#/definitions/ParametersOnActionResponseDTO'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal error
+      security:
+        - OAuth2: [ ]
+  /private/auth/provisioningtags/search:
+    get:
+      tags:
+        - ProvisioningTag API
+      summary: Search a provisioningtag by several criteria,...
+      operationId: searchProvisioningTag
+      produces:
+        - '*/*'
+      parameters:
+        - name: accessType
+          in: query
+          description: Network Access type of the provisioning Action parameters
+          required: false
+          type: string
+          enum:
+            - BBHB
+            - DISE
+            - DOCSIS
+            - FREEDHOME
+            - FTTH
+            - MOBILE
+            - TRUNKSIP
+            - ZATTOO
+        - name: activity
+          in: query
+          description: Provisioning Tag activity of the provisioning Action parameters
+          required: false
+          type: string
+          enum:
+            - INTERNET
+            - MAIL
+            - MEVO
+            - MOBILE
+            - NDD
+            - OX
+            - TELEPHONY
+            - TV
+        - name: nature
+          in: query
+          description: Provisioning Tag Nature of the provisioning Action parameters
+          required: false
+          type: string
+          enum:
+            - A
+            - C
+            - E
+            - O
+            - P
+            - R
+            - U
+        - name: page
+          in: query
+          description: Results page you want to retrieve (0..N)
+          required: false
+          type: integer
+          format: int32
+          x-example: 0
+        - name: size
+          in: query
+          description: Number of records per page.
+          required: false
+          type: integer
+          format: int32
+          x-example: 10
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: tagCode
+          in: query
+          description: Tag Code of the provisioning Action parameters
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PagedModel«ProvisioningTagDTO»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - OAuth2: [ ]
+  /private/auth/provisioningtags/{provisioningTagById}:
+    get:
+      tags:
+        - ProvisioningTag API
+      summary: Find a provisioningtag by Id
+      operationId: getProvisioningTagById
+      produces:
+        - '*/*'
+      parameters:
+        - name: provisioningTagById
+          in: path
+          description: provisioningTagById
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: provisioningtag found
+          schema:
+            $ref: '#/definitions/ProvisioningTagDTORes'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+      security:
+        - OAuth2: [ ]
+    delete:
+      tags:
+        - ProvisioningTag API
+      summary: Delete a provisioningtag by subscriptionId
+      operationId: deleteProvisioningTagById
+      produces:
+        - '*/*'
+      parameters:
+        - name: provisioningTagById
+          in: path
+          description: provisioningTagById
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        - OAuth2: [ ]
+  /private/auth/provisioningtags/{provisioningTagId}:
+    put:
+      tags:
+        - ProvisioningTag API
+      summary: Update a provisioningtag
+      operationId: updateProvisioningTag
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: provisioningTagDTO
+          description: provisioningTagDTO
+          required: true
+          schema:
+            $ref: '#/definitions/ProvisioningTagDTOReq'
+        - name: provisioningTagId
+          in: path
+          description: provisioningTagId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: provisioningtag updated
+          schema:
+            $ref: '#/definitions/ProvisioningTagDTORes'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal error
+      security:
+        - OAuth2: [ ]
+  /private/auth/services:
+    get:
+      tags:
+        - Service API
+      summary: Get all services
+      operationId: getAllServices
+      produces:
+        - '*/*'
+      parameters:
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: size
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: sort
+          in: query
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PagedModel«ServiceDTO»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - OAuth2: [ ]
+    put:
+      tags:
+        - Service API
+      summary: create service
+      operationId: addService
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: addServiceRequest
+          description: addServiceRequest
+          required: true
+          schema:
+            $ref: '#/definitions/AddServiceRequestDTO'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ServiceDTO'
+        '201':
+          description: Service created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal error
+      security:
+        - OAuth2: [ ]
+  /private/auth/services/activaterequest:
+    patch:
+      tags:
+        - Service API
+      summary: activate request on a service
+      operationId: activateRequest
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: requestDTO
+          description: requestDTO
+          required: true
+          schema:
+            $ref: '#/definitions/SearchServiceDTO'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ServiceDTO'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        - OAuth2: [ ]
+  /private/auth/services/addrequest:
+    patch:
+      tags:
+        - Service API
+      summary: Add a request on a service
+      operationId: addRequest
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: serviceRequest
+          description: serviceRequest
+          required: true
+          schema:
+            $ref: '#/definitions/ServiceRequestDTO'
+      responses:
+        '200':
+          description: Service update
+          schema:
+            $ref: '#/definitions/ServiceDTO'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal error
+      security:
+        - OAuth2: [ ]
+  /private/auth/services/cancelrequest:
+    patch:
+      tags:
+        - Service API
+      summary: cancel activation action request on a service
+      operationId: cancelActivationRequest
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: requestDTO
+          description: requestDTO
+          required: true
+          schema:
+            $ref: '#/definitions/SearchServiceDTO'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ServiceDTO'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        - OAuth2: [ ]
+  /private/auth/services/ontId/{ontId}:
+    get:
+      tags:
+        - Service API
+      summary: Get service by ONT ID
+      operationId: getServiceByOntId
+      produces:
+        - '*/*'
+      parameters:
+        - name: ontId
+          in: path
+          description: ontId
+          required: true
+          type: string
+          pattern: .*:[0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+
+      responses:
+        '200':
+          description: Service found
+          schema:
+            $ref: '#/definitions/ServiceDTO'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Service not found
+        '500':
+          description: Internal error
+      security:
+        - OAuth2: [ ]
+  /private/auth/services/rollbackaddrequest:
+    patch:
+      tags:
+        - Service API
+      summary: rollback add a request on a service
+      operationId: rollbackAddRequest
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: requestDTO
+          description: requestDTO
+          required: true
+          schema:
+            $ref: '#/definitions/SearchServiceDTO'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ServiceDTO'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        - OAuth2: [ ]
+  /private/auth/services/search:
+    get:
+      tags:
+        - Service API
+      summary: Search a service by crmServiceId, subscriptionId, parentServiceId, mainRangeId, number, serviceActivity, accessPointId, equipmentId, accessType, customerNo, status, activationDate, accessServiceId
+      operationId: searchUsingGET_1
+      produces:
+        - '*/*'
+      parameters:
+        - name: accessPointId
+          in: query
+          required: false
+          type: string
+        - name: accessServiceId
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: accessType
+          in: query
+          required: false
+          type: string
+          enum:
+            - BBHB
+            - DISE
+            - DOCSIS
+            - FREEDHOME
+            - FTTH
+            - MOBILE
+            - TRUNKSIP
+            - ZATTOO
+        - name: activationDate
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: crmServiceId
+          in: query
+          required: false
+          type: string
+        - name: customerNo
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: dueDate
+          in: query
+          required: false
+          type: string
+          format: date
+        - name: equipmentId
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: number
+          in: query
+          required: false
+          type: string
+        - name: ontId
+          in: query
+          description: Optical Network Termination ID
+          required: false
+          type: string
+          pattern: .*:[0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+
+          x-example: BKR01:1-1-1-2-4
+        - name: page
+          in: query
+          description: Results page you want to retrieve (0..N)
+          required: false
+          type: integer
+          format: int32
+          x-example: 0
+        - name: parentServiceId
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: mainRangeId
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: serviceActivity
+          in: query
+          required: false
+          type: string
+          enum:
+            - INTERNET
+            - MEVO
+            - MOBILE
+            - NDD
+            - OX
+            - TELEPHONY
+            - TV
+        - name: serviceCategory
+          in: query
+          required: false
+          type: string
+          enum:
+            - ACCESS
+            - COMPONENT
+        - name: serviceId
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: size
+          in: query
+          description: Number of records per page.
+          required: false
+          type: integer
+          format: int32
+          x-example: 10
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: status
+          in: query
+          required: false
+          type: string
+          enum:
+            - ACTIVATED
+            - BARRED
+            - CANCELED
+            - DEACTIVATED
+            - FINALSTATE
+            - PENDING
+            - SUSPENDED
+        - name: subscriptionId
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: subscriptionOrderId
+          in: query
+          required: false
+          type: string
+        - name: techId
+          in: query
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PagedModel«ServiceDTO»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - OAuth2: [ ]
+  /private/auth/services/setactiononservice:
+    patch:
+      tags:
+        - Service API
+      summary: set event on service
+      operationId: setEventOnService
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: serviceActionRequestDTO
+          description: serviceActionRequestDTO
+          required: true
+          schema:
+            $ref: '#/definitions/ServiceActionRequestDTO'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ServiceDTO'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        - OAuth2: [ ]
+  /private/auth/services/{id}/revisions:
+    get:
+      tags:
+        - Service API
+      summary: Find service component revisions by Id
+      operationId: getServiceComponentsRevisionsById
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: size
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: sort
+          in: query
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Revisions page
+          schema:
+            $ref: '#/definitions/PagedModel«RevisionDTO«ServiceDTO»»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - OAuth2: [ ]
+  /private/auth/services/{serviceId}:
+    get:
+      tags:
+        - Service API
+      summary: Get service by id
+      operationId: getServiceById
+      produces:
+        - '*/*'
+      parameters:
+        - name: serviceId
+          in: path
+          description: serviceId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ServiceDTO'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - OAuth2: [ ]
+    delete:
+      tags:
+        - Service API
+      summary: delete service
+      operationId: ' delete Service'
+      produces:
+        - '*/*'
+      parameters:
+        - name: forced
+          in: query
+          description: forced
+          required: false
+          type: boolean
+        - name: serviceId
+          in: path
+          description: serviceId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        - OAuth2: [ ]
+    patch:
+      tags:
+        - Service API
+      summary: update service
+      operationId: udpateService
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: serviceId
+          in: path
+          description: serviceId
+          required: true
+          type: integer
+          format: int64
+        - in: body
+          name: updateServiceRequest
+          description: updateServiceRequest
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateServiceRequestDTO'
+      responses:
+        '200':
+          description: Service update
+          schema:
+            $ref: '#/definitions/ServiceDTO'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal error
+      security:
+        - OAuth2: [ ]
+  /private/auth/services/{serviceId}/changetags:
+    patch:
+      tags:
+        - Service API
+      summary: change tags on a service
+      operationId: changeTags
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: changeTags
+          description: changeTags
+          required: true
+          schema:
+            $ref: '#/definitions/ChangeTagsDTO'
+        - name: serviceId
+          in: path
+          description: serviceId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Operation successful
+          schema:
+            $ref: '#/definitions/ChangeTagsResponse'
+        '204':
+          description: No Content
+        '400':
+          description: Invalid request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Service not found
+        '500':
+          description: Internal error
+      security:
+        - OAuth2: [ ]
+  /private/auth/services/{serviceId}/events:
+    get:
+      tags:
+        - Service API
+      summary: find available events for a state
+      operationId: find available events for a state
+      produces:
+        - '*/*'
+      parameters:
+        - name: serviceId
+          in: path
+          description: serviceId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - activate
+                - barring
+                - cancel
+                - create
+                - deactivate
+                - resum_cli
+                - resum_oper
+                - rollbackActivation
+                - rollbackCancellation
+                - rollbackDeactivation
+                - susp_cli
+                - susp_oper
+                - unBarring
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - OAuth2: [ ]
+  /private/auth/services/{serviceId}/tags:
+    delete:
+      tags:
+        - Service API
+      summary: delete all tags on service
+      operationId: delete all tags on service
+      produces:
+        - '*/*'
+      parameters:
+        - name: serviceId
+          in: path
+          description: serviceId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        - OAuth2: [ ]
+  /private/auth/servicesDashboard:
+    get:
+      tags:
+        - Statistics API
+      summary: Collect statistics for the services dashboard
+      operationId: servicesDashboard
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Statistics collected
+          schema:
+            $ref: '#/definitions/ServicesStatsDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal error
+      security:
+        - OAuth2: [ ]
+  /private/auth/tagactivationcodes:
+    get:
+      tags:
+        - Tag Activation API
+      summary: Get all tagparametervalues
+      operationId: getTagParameterValues
+      produces:
+        - '*/*'
+      parameters:
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: size
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: sort
+          in: query
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PagedModel«TagActivationCodeDTO»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - OAuth2: [ ]
+    post:
+      tags:
+        - Tag Activation API
+      summary: Add tagactivationcodes
+      operationId: addTagActivationCode
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: tagActivationCodeDTO
+          description: tagActivationCodeDTO
+          required: true
+          schema:
+            $ref: '#/definitions/TagActivationCodeDTOReq'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/TagActivationCodeDTORes'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - OAuth2: [ ]
+  /private/auth/tagactivationcodes/search:
+    get:
+      tags:
+        - Tag Activation API
+      summary: search tags by specifics filters
+      operationId: search tags by specifics filters
+      produces:
+        - '*/*'
+      parameters:
+        - name: accessType
+          in: query
+          description: Network Access type of the provisioning Action parameters
+          required: false
+          type: string
+          enum:
+            - BBHB
+            - DISE
+            - DOCSIS
+            - FREEDHOME
+            - FTTH
+            - MOBILE
+            - TRUNKSIP
+            - ZATTOO
+        - name: activity
+          in: query
+          description: Provisioning Tag activity of the provisioning Action parameters
+          required: false
+          type: string
+          enum:
+            - INTERNET
+            - MAIL
+            - MEVO
+            - MOBILE
+            - NDD
+            - OX
+            - TELEPHONY
+            - TV
+        - name: nature
+          in: query
+          description: Provisioning Tag Nature of the provisioning Action parameters
+          required: false
+          type: string
+          enum:
+            - A
+            - C
+            - E
+            - O
+            - P
+            - R
+            - U
+        - name: page
+          in: query
+          description: Results page you want to retrieve (0..N)
+          required: false
+          type: integer
+          format: int32
+          x-example: 0
+        - name: size
+          in: query
+          description: Number of records per page.
+          required: false
+          type: integer
+          format: int32
+          x-example: 10
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: tagCodes
+          in: query
+          description: Tag Code of the provisioning Action parameters, could be multiples
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PagedModel«TagActivationCodeDetailsDTO»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - OAuth2: [ ]
+  /private/auth/tagactivationcodes/{provisioningTagId}/{activationCodeId}:
+    delete:
+      tags:
+        - Tag Activation API
+      summary: Delete tags by prov tag id and activation code id
+      operationId: deleteTagActivationCode
+      produces:
+        - '*/*'
+      parameters:
+        - name: activationCodeId
+          in: path
+          description: activationCodeId
+          required: true
+          type: integer
+          format: int64
+        - name: provisioningTagId
+          in: path
+          description: provisioningTagId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        - OAuth2: [ ]
+  /private/auth/technicalparameters:
+    get:
+      tags:
+        - Technical Parameter API
+      summary: Get all TechnicalParameters
+      operationId: getTechnicalParameters
+      produces:
+        - '*/*'
+      parameters:
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: size
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: sort
+          in: query
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PagedModel«TechnicalParameterDTO»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - OAuth2: [ ]
+    post:
+      tags:
+        - Technical Parameter API
+      summary: Add a TechnicalParameter
+      operationId: addTechnicalParameter
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: technicalParameterDTO
+          description: technicalParameterDTO
+          required: true
+          schema:
+            $ref: '#/definitions/TechnicalParameterDTOReq'
+      responses:
+        '201':
+          description: TechnicalParameter created
+          schema:
+            $ref: '#/definitions/TechnicalParameterDTORes'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal error
+      security:
+        - OAuth2: [ ]
+  /private/auth/technicalparameters/search:
+    get:
+      tags:
+        - Technical Parameter API
+      summary: Search a TechnicalParameter by several criteria,...
+      operationId: searchTechnicalParameter
+      produces:
+        - '*/*'
+      parameters:
+        - name: code
+          in: query
+          description: Identifier of the technical parameter
+          required: false
+          type: string
+        - name: page
+          in: query
+          description: Results page you want to retrieve (0..N)
+          required: false
+          type: integer
+          format: int32
+          x-example: 0
+        - name: size
+          in: query
+          description: Number of records per page.
+          required: false
+          type: integer
+          format: int32
+          x-example: 10
+        - name: sort
+          in: query
+          description: 'Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.'
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PagedModel«TechnicalParameterDTO»'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - OAuth2: [ ]
+  /private/auth/technicalparameters/{id}:
+    get:
+      tags:
+        - Technical Parameter API
+      summary: Find a TechnicalParameter by Id
+      operationId: getTechnicalParameterById
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: TechnicalParameter found
+          schema:
+            $ref: '#/definitions/TechnicalParameterDTORes'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '500':
+          description: Internal error
+      security:
+        - OAuth2: [ ]
+    put:
+      tags:
+        - Technical Parameter API
+      summary: Update a TechnicalParameter
+      operationId: updateTechnicalParameter
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+        - in: body
+          name: technicalParameterDTO
+          description: technicalParameterDTO
+          required: true
+          schema:
+            $ref: '#/definitions/TechnicalParameterDTOReq'
+      responses:
+        '200':
+          description: TechnicalParameter updated
+          schema:
+            $ref: '#/definitions/TechnicalParameterDTORes'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal error
+      security:
+        - OAuth2: [ ]
+    delete:
+      tags:
+        - Technical Parameter API
+      summary: Delete a TechnicalParameter by subscriptionId
+      operationId: deleteTechnicalParameterById
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        - OAuth2: [ ]
+  /public/enums/activity:
+    get:
+      tags:
+        - Enumeration API
+      summary: Get Activity values
+      operationId: getActivities
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - INTERNET
+                - MEVO
+                - MOBILE
+                - NDD
+                - OX
+                - TELEPHONY
+                - TV
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /public/enums/componentType:
+    get:
+      tags:
+        - Enumeration API
+      summary: Get Component Type values
+      operationId: getComponentTypes
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - CLOUDCALLING
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /public/enums/network:
+    get:
+      tags:
+        - Enumeration API
+      summary: Get Network (Access Type) values
+      operationId: getNetworks
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - BBHB
+                - DISE
+                - DOCSIS
+                - FREEDHOME
+                - FTTH
+                - MOBILE
+                - TRUNKSIP
+                - ZATTOO
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+securityDefinitions:
+  OAuth2:
+    type: oauth2
+    authorizationUrl: https://iam-ci.crm.epic.infra/auth/realms/epic-ci/protocol/openid-connect/auth
+    tokenUrl: https://iam-ci.crm.epic.infra/auth/realms/epic-ci/protocol/openid-connect/token
+    flow: accessCode
+    scopes:
+      all: all APIs
+definitions:
+  ActivationCodeDTO:
+    type: object
+    properties:
+      activationCodeId:
+        type: integer
+        format: int64
+      code:
+        type: string
+      description:
+        type: string
+      links:
+        $ref: '#/definitions/Links'
+      nature:
+        type: string
+        enum:
+          - BARRING
+          - BOOSTER
+          - BUCKET
+          - CONFIG
+          - FORWARDING
+          - LOCK
+          - OPTION
+          - PROFILE
+      networkComponent:
+        type: string
+        enum:
+          - CS
+          - DISE
+          - OLT
+          - OPI
+          - PCRF
+          - SCP
+          - SDP
+          - SPG
+          - STREAMWIDE
+          - TVCAS
+          - ZATTOO
+    title: ActivationCodeDTO
+  ActivationCodeDTOReq:
+    type: object
+    properties:
+      activationCodeId:
+        type: integer
+        format: int64
+      code:
+        type: string
+      description:
+        type: string
+      links:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+      nature:
+        type: string
+        enum:
+          - BARRING
+          - BOOSTER
+          - BUCKET
+          - CONFIG
+          - FORWARDING
+          - LOCK
+          - OPTION
+          - PROFILE
+      networkComponent:
+        type: string
+        enum:
+          - CS
+          - DISE
+          - OLT
+          - OPI
+          - PCRF
+          - SCP
+          - SDP
+          - SPG
+          - STREAMWIDE
+          - TVCAS
+          - ZATTOO
+    title: ActivationCodeDTOReq
+  ActivationCodeDTORes:
+    type: object
+    properties:
+      activationCodeId:
+        type: integer
+        format: int64
+      code:
+        type: string
+      description:
+        type: string
+      links:
+        $ref: '#/definitions/Links'
+      nature:
+        type: string
+        enum:
+          - BARRING
+          - BOOSTER
+          - BUCKET
+          - CONFIG
+          - FORWARDING
+          - LOCK
+          - OPTION
+          - PROFILE
+      networkComponent:
+        type: string
+        enum:
+          - CS
+          - DISE
+          - OLT
+          - OPI
+          - PCRF
+          - SCP
+          - SDP
+          - SPG
+          - STREAMWIDE
+          - TVCAS
+          - ZATTOO
+    title: ActivationCodeDTORes
+  AddServiceRequestDTO:
+    type: object
+    required:
+      - serviceActivity
+      - serviceCategory
+    properties:
+      accessType:
+        type: string
+        enum:
+          - BBHB
+          - DISE
+          - DOCSIS
+          - FREEDHOME
+          - FTTH
+          - MOBILE
+          - TRUNKSIP
+          - ZATTOO
+      componentType:
+        type: string
+        enum:
+          - CLOUDCALLING
+      serviceActivity:
+        type: string
+        enum:
+          - INTERNET
+          - MEVO
+          - MOBILE
+          - NDD
+          - OX
+          - TELEPHONY
+          - TV
+      serviceCategory:
+        type: string
+        enum:
+          - ACCESS
+          - COMPONENT
+      subscriptionId:
+        type: integer
+        format: int64
+    title: AddServiceRequestDTO
+  ChangeTagsDTO:
+    type: object
+    properties:
+      changeTags:
+        type: array
+        items:
+          $ref: '#/definitions/TagActionDTO'
+    title: ChangeTagsDTO
+  ChangeTagsResponse:
+    type: object
+    properties:
+      serviceActivations:
+        type: array
+        items:
+          $ref: '#/definitions/ServiceActivationDTO'
+      serviceTags:
+        type: array
+        items:
+          $ref: '#/definitions/ProvisioningTagDTO'
+    title: ChangeTagsResponse
+  ImportErrorDTO:
+    type: object
+    properties:
+      error:
+        type: string
+      group:
+        type: string
+      id:
+        type: integer
+        format: int64
+      line:
+        type: integer
+        format: int32
+    title: ImportErrorDTO
+  ImportHistoryDTO:
+    type: object
+    properties:
+      end:
+        type: string
+        format: date-time
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/ImportErrorDTO'
+      fileName:
+        type: string
+      id:
+        type: integer
+        format: int64
+      importStatus:
+        type: string
+        enum:
+          - ABORTED
+          - COMPLETED
+          - STARTED
+      start:
+        type: string
+        format: date-time
+    title: ImportHistoryDTO
+  Link:
+    type: object
+    properties:
+      deprecation:
+        type: string
+      href:
+        type: string
+      hreflang:
+        type: string
+      media:
+        type: string
+      name:
+        type: string
+      profile:
+        type: string
+      rel:
+        $ref: '#/definitions/LinkRelation'
+      title:
+        type: string
+      type:
+        type: string
+    title: Link
+  LinkRelation:
+    type: object
+    title: LinkRelation
+  Links:
+    type: object
+    properties:
+      empty:
+        type: boolean
+    title: Links
+  PageMetadata:
+    type: object
+    properties:
+      number:
+        type: integer
+        format: int64
+      size:
+        type: integer
+        format: int64
+      totalElements:
+        type: integer
+        format: int64
+      totalPages:
+        type: integer
+        format: int64
+    title: PageMetadata
+  Pageable:
+    type: object
+    properties:
+      page:
+        type: integer
+        format: int32
+      size:
+        type: integer
+        format: int32
+      sort:
+        type: string
+    title: Pageable
+  PagedModel«ActivationCodeDTO»:
+    type: object
+    properties:
+      content:
+        type: array
+        items:
+          $ref: '#/definitions/ActivationCodeDTORes'
+      links:
+        $ref: '#/definitions/Links'
+      page:
+        $ref: '#/definitions/PageMetadata'
+    title: PagedModel«ActivationCodeDTO»
+  PagedModel«ProvisioningTagDTO»:
+    type: object
+    properties:
+      content:
+        type: array
+        items:
+          $ref: '#/definitions/ProvisioningTagDTORes'
+      links:
+        $ref: '#/definitions/Links'
+      page:
+        $ref: '#/definitions/PageMetadata'
+    title: PagedModel«ProvisioningTagDTO»
+  PagedModel«RevisionDTO«ServiceDTO»»:
+    type: object
+    properties:
+      content:
+        type: array
+        items:
+          $ref: '#/definitions/RevisionDTO«ServiceDTO»'
+      links:
+        $ref: '#/definitions/Links'
+      page:
+        $ref: '#/definitions/PageMetadata'
+    title: PagedModel«RevisionDTO«ServiceDTO»»
+  PagedModel«ServiceActivationDTO»:
+    type: object
+    properties:
+      content:
+        type: array
+        items:
+          $ref: '#/definitions/ServiceActivationDTO'
+      links:
+        $ref: '#/definitions/Links'
+      page:
+        $ref: '#/definitions/PageMetadata'
+    title: PagedModel«ServiceActivationDTO»
+  PagedModel«ServiceDTO»:
+    type: object
+    properties:
+      content:
+        type: array
+        items:
+          $ref: '#/definitions/ServiceDTO'
+      links:
+        $ref: '#/definitions/Links'
+      page:
+        $ref: '#/definitions/PageMetadata'
+    title: PagedModel«ServiceDTO»
+  PagedModel«TagActivationCodeDTO»:
+    type: object
+    properties:
+      content:
+        type: array
+        items:
+          $ref: '#/definitions/TagActivationCodeDTORes'
+      links:
+        $ref: '#/definitions/Links'
+      page:
+        $ref: '#/definitions/PageMetadata'
+    title: PagedModel«TagActivationCodeDTO»
+  PagedModel«TagActivationCodeDetailsDTO»:
+    type: object
+    properties:
+      content:
+        type: array
+        items:
+          $ref: '#/definitions/TagActivationCodeDetailsDTO'
+      links:
+        $ref: '#/definitions/Links'
+      page:
+        $ref: '#/definitions/PageMetadata'
+    title: PagedModel«TagActivationCodeDetailsDTO»
+  PagedModel«TechnicalParameterDTO»:
+    type: object
+    properties:
+      content:
+        type: array
+        items:
+          $ref: '#/definitions/TechnicalParameterDTORes'
+      links:
+        $ref: '#/definitions/Links'
+      page:
+        $ref: '#/definitions/PageMetadata'
+    title: PagedModel«TechnicalParameterDTO»
+  Page«ImportHistoryDTO»:
+    type: object
+    properties:
+      content:
+        type: array
+        items:
+          $ref: '#/definitions/ImportHistoryDTO'
+      empty:
+        type: boolean
+      first:
+        type: boolean
+      last:
+        type: boolean
+      number:
+        type: integer
+        format: int32
+      numberOfElements:
+        type: integer
+        format: int32
+      pageable:
+        $ref: '#/definitions/Pageable'
+      size:
+        type: integer
+        format: int32
+      sort:
+        $ref: '#/definitions/Sort'
+      totalElements:
+        type: integer
+        format: int64
+      totalPages:
+        type: integer
+        format: int32
+    title: Page«ImportHistoryDTO»
+  ParametersOnActionDTO:
+    type: object
+    required:
+      - tagAction
+    properties:
+      tagAction:
+        type: string
+        enum:
+          - CANCEL
+          - MIGRATION
+          - PURCHASE
+          - TRANSFER
+          - TRANSITION
+      tagCode:
+        type: string
+    title: ParametersOnActionDTO
+  ParametersOnActionRequestDTO:
+    type: object
+    properties:
+      parametersOnActionDTO:
+        type: array
+        items:
+          $ref: '#/definitions/ParametersOnActionDTO'
+    title: ParametersOnActionRequestDTO
+  ParametersOnActionResponseDTO:
+    type: object
+    properties:
+      provisioningActionParameterDTO:
+        type: array
+        items:
+          $ref: '#/definitions/ProvisioningActionParameterDTO'
+    title: ParametersOnActionResponseDTO
+  ProvisioningActionDTO:
+    type: object
+    properties:
+      links:
+        $ref: '#/definitions/Links'
+      provActionParameters:
+        type: array
+        items:
+          $ref: '#/definitions/ProvisioningActionParameterDTO'
+      provisioningTag:
+        $ref: '#/definitions/ProvisioningTagDTORes'
+      serviceAction:
+        type: string
+        enum:
+          - ACTIVATION
+          - BARRING
+          - CHGE_ADDR
+          - CHGE_CLI
+          - DEACTIVATION
+          - MIGRATION
+          - RESUM_CLI
+          - RESUM_OPER
+          - SUSP_CLI
+          - SUSP_OPER
+          - UNBARRING
+      tagAction:
+        type: string
+        enum:
+          - CANCEL
+          - MIGRATION
+          - PURCHASE
+          - TRANSFER
+          - TRANSITION
+      tagActionId:
+        type: integer
+        format: int64
+    title: ProvisioningActionDTO
+  ProvisioningActionParameterDTO:
+    type: object
+    properties:
+      links:
+        $ref: '#/definitions/Links'
+      parameterValue:
+        type: string
+      technicalParameter:
+        $ref: '#/definitions/TechnicalParameterDTO'
+    title: ProvisioningActionParameterDTO
+  ProvisioningProductDTO:
+    type: object
+    properties:
+      links:
+        $ref: '#/definitions/Links'
+      parentProvAction:
+        $ref: '#/definitions/ProvisioningActionDTO'
+      productAction:
+        type: string
+        enum:
+          - ACTIVATION
+          - ADD_QTY
+          - BARRING
+          - CHGE_ADDR
+          - CHGE_ANCIL
+          - CHGE_CLI
+          - CHGE_EQT
+          - CHGE_NUM
+          - DEACTIVATION
+          - DEL_QTY
+          - FIRST_ACTIVATION
+          - MIGRATION
+          - RESET_CELL
+          - RESUM_CLI
+          - RESUM_OPER
+          - RETURN_ANCIL
+          - RETURN_EQT
+          - SUSP_CLI
+          - SUSP_OPER
+          - TRANSFER
+          - TRANSITION
+          - UNBARRING
+      productCode:
+        type: string
+      provAction:
+        $ref: '#/definitions/ProvisioningActionDTO'
+      provisioningProductId:
+        type: integer
+        format: int64
+    title: ProvisioningProductDTO
+  ProvisioningProductRequestDTO:
+    type: object
+    properties:
+      productAction:
+        type: string
+        enum:
+          - ACTIVATION
+          - ADD_QTY
+          - BARRING
+          - CHGE_ADDR
+          - CHGE_ANCIL
+          - CHGE_CLI
+          - CHGE_EQT
+          - CHGE_NUM
+          - DEACTIVATION
+          - DEL_QTY
+          - FIRST_ACTIVATION
+          - MIGRATION
+          - RESET_CELL
+          - RESUM_CLI
+          - RESUM_OPER
+          - RETURN_ANCIL
+          - RETURN_EQT
+          - SUSP_CLI
+          - SUSP_OPER
+          - TRANSFER
+          - TRANSITION
+          - UNBARRING
+      productCode:
+        type: string
+    title: ProvisioningProductRequestDTO
+  ProvisioningProductRequestsDTO:
+    type: object
+    properties:
+      provisioningProductRequests:
+        type: array
+        items:
+          $ref: '#/definitions/ProvisioningProductRequestDTO'
+    title: ProvisioningProductRequestsDTO
+  ProvisioningTagDTO:
+    type: object
+    properties:
+      accessType:
+        type: string
+        enum:
+          - BBHB
+          - DISE
+          - DOCSIS
+          - FREEDHOME
+          - FTTH
+          - MOBILE
+          - TRUNKSIP
+          - ZATTOO
+      activity:
+        type: string
+        enum:
+          - INTERNET
+          - MAIL
+          - MEVO
+          - MOBILE
+          - NDD
+          - OX
+          - TELEPHONY
+          - TV
+      category:
+        type: string
+        enum:
+          - ACCESS
+          - COMPONENT
+      description:
+        type: string
+      links:
+        $ref: '#/definitions/Links'
+      nature:
+        type: string
+        enum:
+          - A
+          - C
+          - E
+          - O
+          - P
+          - R
+          - U
+      persistent:
+        type: boolean
+      tagCode:
+        type: string
+      tagId:
+        type: integer
+        format: int64
+      tagParameters:
+        type: array
+        items:
+          $ref: '#/definitions/TagParameterDTO'
+    title: ProvisioningTagDTO
+  ProvisioningTagDTOReq:
+    type: object
+    properties:
+      accessType:
+        type: string
+        enum:
+          - BBHB
+          - DISE
+          - DOCSIS
+          - FREEDHOME
+          - FTTH
+          - MOBILE
+          - TRUNKSIP
+          - ZATTOO
+      activity:
+        type: string
+        enum:
+          - INTERNET
+          - MAIL
+          - MEVO
+          - MOBILE
+          - NDD
+          - OX
+          - TELEPHONY
+          - TV
+      category:
+        type: string
+        enum:
+          - ACCESS
+          - COMPONENT
+      description:
+        type: string
+      links:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+      nature:
+        type: string
+        enum:
+          - A
+          - C
+          - E
+          - O
+          - P
+          - R
+          - U
+      persistent:
+        type: boolean
+      tagCode:
+        type: string
+      tagId:
+        type: integer
+        format: int64
+      tagParameters:
+        type: array
+        items:
+          $ref: '#/definitions/TagParameterDTO'
+    title: ProvisioningTagDTOReq
+  ProvisioningTagDTORes:
+    type: object
+    properties:
+      accessType:
+        type: string
+        enum:
+          - BBHB
+          - DISE
+          - DOCSIS
+          - FREEDHOME
+          - FTTH
+          - MOBILE
+          - TRUNKSIP
+          - ZATTOO
+      activity:
+        type: string
+        enum:
+          - INTERNET
+          - MAIL
+          - MEVO
+          - MOBILE
+          - NDD
+          - OX
+          - TELEPHONY
+          - TV
+      category:
+        type: string
+        enum:
+          - ACCESS
+          - COMPONENT
+      description:
+        type: string
+      links:
+        $ref: '#/definitions/Links'
+      nature:
+        type: string
+        enum:
+          - A
+          - C
+          - E
+          - O
+          - P
+          - R
+          - U
+      persistent:
+        type: boolean
+      tagCode:
+        type: string
+      tagId:
+        type: integer
+        format: int64
+      tagParameters:
+        type: array
+        items:
+          $ref: '#/definitions/TagParameterDTO'
+    title: ProvisioningTagDTORes
+  RevisionDTO«ServiceDTO»:
+    type: object
+    properties:
+      author:
+        type: string
+      date:
+        type: string
+        format: date-time
+      entity:
+        $ref: '#/definitions/ServiceDTO'
+      links:
+        $ref: '#/definitions/Links'
+    title: RevisionDTO«ServiceDTO»
+  SearchServiceDTO:
+    type: object
+    properties:
+      accessPointId:
+        type: string
+      accessServiceId:
+        type: integer
+        format: int64
+      accessType:
+        type: string
+        enum:
+          - BBHB
+          - DISE
+          - DOCSIS
+          - FREEDHOME
+          - FTTH
+          - MOBILE
+          - TRUNKSIP
+          - ZATTOO
+      activationDate:
+        type: string
+        format: date-time
+      crmServiceId:
+        type: string
+      customerNo:
+        type: integer
+        format: int64
+      dueDate:
+        type: string
+        example: yyyy-MM-dd'T'HH:mm:ss
+      equipmentId:
+        type: integer
+        format: int64
+      number:
+        type: string
+      ontId:
+        type: string
+        example: BKR01:1-1-1-2-4
+        description: Optical Network Termination ID
+        pattern: .*:[0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+
+      parentServiceId:
+        type: integer
+        format: int64
+      mainRangeId:
+        type: integer
+        format: int64
+      serviceActivity:
+        type: string
+        enum:
+          - INTERNET
+          - MEVO
+          - MOBILE
+          - NDD
+          - OX
+          - TELEPHONY
+          - TV
+      serviceCategory:
+        type: string
+        enum:
+          - ACCESS
+          - COMPONENT
+      serviceId:
+        type: integer
+        format: int64
+      status:
+        type: string
+        enum:
+          - ACTIVATED
+          - BARRED
+          - CANCELED
+          - DEACTIVATED
+          - FINALSTATE
+          - PENDING
+          - SUSPENDED
+      subscriptionId:
+        type: integer
+        format: int64
+      subscriptionOrderId:
+        type: string
+      techId:
+        type: string
+    title: SearchServiceDTO
+  ServiceActionRequestDTO:
+    type: object
+    required:
+      - action
+    properties:
+      accessPointIdRequest:
+        type: string
+      action:
+        type: string
+        enum:
+          - activate
+          - barring
+          - cancel
+          - create
+          - deactivate
+          - resum_cli
+          - resum_oper
+          - rollbackActivation
+          - rollbackCancellation
+          - rollbackDeactivation
+          - susp_cli
+          - susp_oper
+          - unBarring
+      actionRequest:
+        type: string
+        enum:
+          - ACTIVATION
+          - BARRING
+          - DEACTIVATION
+          - RESUM_CLI
+          - RESUM_OPER
+          - SUSP_CLI
+          - SUSP_OPER
+          - UNBARRING
+      ancillaryEquipmentIdsRequest:
+        type: string
+      equipmentIdRequest:
+        type: integer
+        format: int64
+      numberRequest:
+        type: string
+      parentServiceOrderId:
+        type: string
+      plannedDate:
+        type: string
+        example: yyyy-MM-dd'T'HH:mm:ss
+      serviceId:
+        type: integer
+        format: int64
+      subscriptionOrderId:
+        type: string
+    title: ServiceActionRequestDTO
+  ServiceActivationDTO:
+    type: object
+    properties:
+      activCode:
+        $ref: '#/definitions/ActivationCodeDTO'
+      activValue:
+        type: integer
+        format: int64
+      links:
+        $ref: '#/definitions/Links'
+    title: ServiceActivationDTO
+  ServiceDTO:
+    type: object
+    properties:
+      actionEnd:
+        type: string
+        example: '2019-04-14T00:00:00'
+        description: End of the current action
+      actionPlanned:
+        type: boolean
+        description: Whether the action has been planned
+      actionRequest:
+        type: string
+        description: Action requested on the service
+        enum:
+          - ACTIVATION
+          - BARRING
+          - DEACTIVATION
+          - RESUM_CLI
+          - RESUM_OPER
+          - SUSP_CLI
+          - SUSP_OPER
+          - UNBARRING
+      actionStart:
+        type: string
+        example: '2019-04-14T00:00:00'
+        description: Start of the current action
+      activationDate:
+        type: string
+        example: '2019-04-14T00:00:00'
+        description: Activation Date
+      barringDate:
+        type: string
+        example: '2019-04-14T00:00:00'
+        description: Barring Date
+      cancellationDate:
+        type: string
+        example: '2019-04-14T00:00:00'
+        description: Cancellation Date
+      creationDate:
+        type: string
+        example: '2019-04-14T00:00:00'
+        description: Creation Date
+      crmServiceId:
+        type: string
+        example: 1
+        description: CRM Service Id
+      customerNo:
+        type: integer
+        format: int64
+        example: 1
+        description: Customer number
+      dateRequest:
+        type: string
+        example: '2019-04-14T00:00:00'
+        description: When the request has been added
+      deactivationDate:
+        type: string
+        example: '2019-04-14T00:00:00'
+        description: Deactivation Date
+      links:
+        $ref: '#/definitions/Links'
+      number:
+        type: string
+        description: number
+      onGoingAction:
+        type: boolean
+        description: boolean
+      plannedDate:
+        type: string
+        example: '2019-04-14T00:00:00'
+        description: Planned date for the action to be done
+      mainRangeId:
+        type: integer
+        format: int64
+        example: 1
+        description: Dedicated range of numbers
+      reasonRequest:
+        type: string
+        description: Reason of the request
+      resumedDate:
+        type: string
+        example: '2019-04-14T00:00:00'
+        description: Resumed Date
+      serviceActionStatus:
+        type: string
+        description: Status of the current action
+        enum:
+          - CANCELED
+          - COMPLETED
+          - PENDING
+      serviceActivations:
+        type: array
+        description: List of serviceActivations
+        items:
+          $ref: '#/definitions/ServiceActivationDTO'
+      serviceActivity:
+        type: string
+        example: MOBILE
+        description: MOBILE, INTERNET, SIP, TV, NDD, MAILPRO, MAIL, WIFI, VOIP, MEVO
+        enum:
+          - INTERNET
+          - MEVO
+          - MOBILE
+          - NDD
+          - OX
+          - TELEPHONY
+          - TV
+      serviceCategory:
+        type: string
+        example: ACCESS
+        description: ACCESS or COMPONENT
+        enum:
+          - ACCESS
+          - COMPONENT
+      serviceId:
+        type: integer
+        format: int64
+        example: 1
+        description: Database auto-generated serviceId
+      serviceOrderId:
+        type: string
+        description: Service Order ID
+      serviceParameters:
+        type: array
+        description: Parameters set on the service
+        items:
+          $ref: '#/definitions/ServiceParameterDTO'
+      serviceTags:
+        type: array
+        description: List of serviceTags
+        items:
+          $ref: '#/definitions/ServiceTagDTO'
+      serviceTransitions:
+        type: array
+        description: List of all possible transitions
+        items:
+          type: string
+          enum:
+            - activate
+            - barring
+            - cancel
+            - create
+            - deactivate
+            - resum_cli
+            - resum_oper
+            - rollbackActivation
+            - rollbackCancellation
+            - rollbackDeactivation
+            - susp_cli
+            - susp_oper
+            - unBarring
+      status:
+        type: string
+        description: PENDING, ACTIVATED, DEACTIVATED, BARRED, SUSPENDED, CANCELED
+        enum:
+          - ACTIVATED
+          - BARRED
+          - CANCELED
+          - DEACTIVATED
+          - FINALSTATE
+          - PENDING
+          - SUSPENDED
+      subscriptionId:
+        type: integer
+        format: int64
+        example: 1
+        description: subscription Id
+      suspensionDate:
+        type: string
+        example: '2019-04-14T00:00:00'
+        description: Suspension Date
+    title: ServiceDTO
+  ServiceParameterDTO:
+    type: object
+    properties:
+      technicalParameter:
+        description: ID of the linked Technical parameter
+        $ref: '#/definitions/TechnicalParameterDTO'
+      value:
+        type: string
+        description: value
+    title: ServiceParameterDTO
+  ServiceRequestDTO:
+    type: object
+    properties:
+      accessPointIdRequest:
+        type: string
+      actionRequest:
+        type: string
+        enum:
+          - ACTIVATION
+          - BARRING
+          - DEACTIVATION
+          - RESUM_CLI
+          - RESUM_OPER
+          - SUSP_CLI
+          - SUSP_OPER
+          - UNBARRING
+      ancillaryEquipmentIdsRequest:
+        type: string
+      equipmentIdRequest:
+        type: integer
+        format: int64
+      numberRequest:
+        type: string
+      parentServiceOrderId:
+        type: string
+      plannedDate:
+        type: string
+        example: yyyy-MM-dd'T'HH:mm:ss
+      serviceId:
+        type: integer
+        format: int64
+      subscriptionOrderId:
+        type: string
+    title: ServiceRequestDTO
+  ServiceTagDTO:
+    type: object
+    properties:
+      provisioningTag:
+        $ref: '#/definitions/ProvisioningTagDTO'
+      tagValue:
+        type: integer
+        format: int64
+        example: 1
+    title: ServiceTagDTO
+  ServicesStatsDto:
+    type: object
+    properties:
+      links:
+        $ref: '#/definitions/Links'
+      statusOfServices:
+        type: object
+        additionalProperties:
+          type: integer
+          format: int64
+    title: ServicesStatsDto
+  Sort:
+    type: object
+    properties:
+      empty:
+        type: boolean
+      sorted:
+        type: boolean
+      unsorted:
+        type: boolean
+    title: Sort
+  TagActionDTO:
+    type: object
+    required:
+      - tagAction
+    properties:
+      tagAction:
+        type: string
+        enum:
+          - ADD
+          - REMOVE
+      tagCode:
+        type: string
+    title: TagActionDTO
+  TagActivationCodeDTOReq:
+    type: object
+    properties:
+      activId:
+        type: integer
+        format: int64
+      links:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+      tagId:
+        type: integer
+        format: int64
+      tagValue:
+        type: integer
+        format: int64
+    title: TagActivationCodeDTOReq
+  TagActivationCodeDTORes:
+    type: object
+    properties:
+      activId:
+        type: integer
+        format: int64
+      links:
+        $ref: '#/definitions/Links'
+      tagId:
+        type: integer
+        format: int64
+      tagValue:
+        type: integer
+        format: int64
+    title: TagActivationCodeDTORes
+  TagActivationCodeDetailsDTO:
+    type: object
+    properties:
+      activationCode:
+        $ref: '#/definitions/ActivationCodeDTO'
+      links:
+        $ref: '#/definitions/Links'
+      provisioningTag:
+        $ref: '#/definitions/ProvisioningTagDTO'
+      tagValue:
+        type: integer
+        format: int64
+    title: TagActivationCodeDetailsDTO
+  TagParameterDTO:
+    type: object
+    properties:
+      code:
+        type: string
+      description:
+        type: string
+      paramValue:
+        type: string
+    title: TagParameterDTO
+  TechnicalParameterDTO:
+    type: object
+    required:
+      - parameterType
+    properties:
+      description:
+        type: string
+      links:
+        $ref: '#/definitions/Links'
+      parameterCode:
+        type: string
+      parameterId:
+        type: integer
+        format: int64
+      parameterType:
+        type: string
+        enum:
+          - CONTEXT
+          - STATIC
+    title: TechnicalParameterDTO
+  TechnicalParameterDTOReq:
+    type: object
+    required:
+      - parameterType
+    properties:
+      description:
+        type: string
+      links:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+      parameterCode:
+        type: string
+      parameterId:
+        type: integer
+        format: int64
+      parameterType:
+        type: string
+        enum:
+          - CONTEXT
+          - STATIC
+    title: TechnicalParameterDTOReq
+  TechnicalParameterDTORes:
+    type: object
+    required:
+      - parameterType
+    properties:
+      description:
+        type: string
+      links:
+        $ref: '#/definitions/Links'
+      parameterCode:
+        type: string
+      parameterId:
+        type: integer
+        format: int64
+      parameterType:
+        type: string
+        enum:
+          - CONTEXT
+          - STATIC
+    title: TechnicalParameterDTORes
+  UpdateServiceRequestDTO:
+    type: object
+    properties:
+      accessPointId:
+        type: string
+      accessServiceId:
+        type: integer
+        format: int64
+      action:
+        type: string
+        enum:
+          - addAccPoint
+          - addAccess
+          - addCrmRef
+          - addEqt
+          - addNumber
+          - addParent
+          - addRange
+          - changeAccPoint
+          - changeAccess
+          - changeCrmRef
+          - changeEqt
+          - changeNumber
+          - changeOntId
+          - changeParent
+          - changeRange
+          - changeTechId
+          - removeAccPoint
+          - removeAccess
+          - removeEqt
+          - removeNumber
+          - removeOntId
+          - removeParent
+          - removeRange
+          - removeTechId
+      activityNumber:
+        type: string
+      crmServiceId:
+        type: string
+      customerNo:
+        type: integer
+        format: int64
+      equipmentCategory:
+        type: string
+        enum:
+          - ANCILLARY
+          - CPE
+          - SIMCARD
+      equipmentId:
+        type: integer
+        format: int64
+      number:
+        type: string
+      ontId:
+        type: string
+        example: BKR01:1-1-1-2-4
+        pattern: .*:[0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+
+      parentServiceId:
+        type: integer
+        format: int64
+      mainRangeId:
+        type: integer
+        format: int64
+      serviceId:
+        type: integer
+        format: int64
+      techId:
+        type: string
+    title: UpdateServiceRequestDTO
