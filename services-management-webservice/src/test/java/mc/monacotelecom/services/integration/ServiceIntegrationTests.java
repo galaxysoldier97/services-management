@@ -1977,7 +1977,7 @@ class ServiceIntegrationTests extends BaseIntegrationTest {
         void createAndActivate_success() throws Exception {
             mockMvc.perform(put(ROUTE_SERVICE + "/createandactivate")
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
-                            .content("{\"subscriptionId\": 1000, \"serviceCategory\": \"ACCESS\", \"serviceActivity\": \"INTERNET\", \"accessType\": \"FTTH\", \"number\": \"12345\", \"activityNumber\": \"INTERNET\"}"))
+                            .content("{\"serviceCategory\": \"ACCESS\", \"serviceActivity\": \"INTERNET\", \"accessType\": \"FTTH\", \"number\": \"12345\"}"))
                     .andDo(print())
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.serviceId").exists())

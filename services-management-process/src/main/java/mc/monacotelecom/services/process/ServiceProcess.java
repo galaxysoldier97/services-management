@@ -168,7 +168,11 @@ public class ServiceProcess {
             UpdateServiceDTO updateDTO = new UpdateServiceDTO();
             updateDTO.setAction(ServiceUpdateAction.addNumber);
             updateDTO.setNumber(addServiceRequest.getNumber());
-            updateDTO.setActivityNumber(addServiceRequest.getActivityNumber());
+            String activity = addServiceRequest.getActivityNumber();
+            if (activity == null && addServiceRequest.getServiceActivity() != null) {
+                activity = addServiceRequest.getServiceActivity().name();
+            }
+            updateDTO.setActivityNumber(activity);
             update(createdService.getServiceId(), updateDTO);
         }
 

@@ -75,44 +75,6 @@ paths:
         - epic-ci:
             - all
       deprecated: false
-  "/private/auth/services/createandactivate":
-    put:
-      tags:
-        - Service API
-      summary: create, associate number and activate service
-      operationId: addServiceAndActivate
-      consumes:
-        - application/json
-      produces:
-        - "*/*"
-      parameters:
-        - in: body
-          name: addServiceRequest
-          description: addServiceRequest
-          required: true
-          schema:
-            originalRef: AddServiceRequestDTO
-            "$ref": "#/definitions/AddServiceRequestDTO"
-      responses:
-        '200':
-          description: OK
-          schema:
-            originalRef: ServiceDTO
-            "$ref": "#/definitions/ServiceDTO"
-        '201':
-          description: Service created and activated
-          schema:
-            originalRef: ServiceDTO
-            "$ref": "#/definitions/ServiceDTO"
-        '500':
-          description: Internal error
-      security:
-        - OAuth2: []
-        - monaco-telecom-dev:
-            - all
-        - epic-ci:
-            - all
-      deprecated: false
     post:
       tags:
         - ActivationCode API
@@ -1357,6 +1319,45 @@ paths:
         - epic-ci:
             - all
       deprecated: false
+  "/private/auth/services/createandactivate":
+    put:
+      tags:
+        - Service API
+      summary: create, associate number and activate service
+      operationId: addServiceAndActivate
+      consumes:
+        - application/json
+      produces:
+        - "*/*"
+      parameters:
+        - in: body
+          name: addServiceRequest
+          description: addServiceRequest
+          required: true
+          schema:
+            originalRef: AddServiceRequestDTO
+            "$ref": "#/definitions/AddServiceRequestDTO"
+      responses:
+        200:
+          description: OK
+          schema:
+            originalRef: ServiceDTO
+            "$ref": "#/definitions/ServiceDTO"
+        201:
+          description: Service created and activated
+          schema:
+            originalRef: ServiceDTO
+            "$ref": "#/definitions/ServiceDTO"
+        500:
+          description: Internal error
+      security:
+        - OAuth2: []
+        - monaco-telecom-dev:
+            - all
+        - epic-ci:
+            - all
+      deprecated: false
+
   "/private/auth/services/activaterequest":
     patch:
       tags:
