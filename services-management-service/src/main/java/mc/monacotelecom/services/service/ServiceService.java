@@ -66,6 +66,11 @@ public class ServiceService {
         return serviceProcess.addServiceOnSubscription(addServiceRequest);
     }
 
+    @Transactional
+    public ServiceDTO addServiceAndActivate(AddServiceRequestDTO addServiceRequest) {
+        return serviceProcess.addServiceAndActivate(addServiceRequest);
+    }
+
     @Transactional(readOnly = true)
     public ServiceDTO getById(Long serviceId) {
         return serviceProcess.getById(serviceId);

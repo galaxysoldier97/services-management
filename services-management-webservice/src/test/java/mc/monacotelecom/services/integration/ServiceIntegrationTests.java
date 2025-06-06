@@ -1969,6 +1969,23 @@ class ServiceIntegrationTests extends BaseIntegrationTest {
         }
     }
 
+    @DisplayName("Create and activate service with number")
+    @Nested
+    class CreateAndActivateService {
+
+        @Test
+        void createAndActivate_success() throws Exception {
+            mockMvc.perform(put(ROUTE_SERVICE + "/createandactivate")
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .content("{\"serviceCategory\": \"ACCESS\", \"serviceActivity\": \"INTERNET\", \"accessType\": \"FTTH\", \"number\": \"12345\"}"))
+                    .andDo(print())
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.serviceId").exists())
+                    .andExpect(jsonPath("$.status").value("ACTIVATED"))
+                    .andExpect(jsonPath("$.number").value("12345"));
+        }
+    }
+
     @DisplayName("Update service")
     @Nested
     class UpdateService {

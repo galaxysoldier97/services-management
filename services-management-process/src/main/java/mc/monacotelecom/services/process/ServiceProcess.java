@@ -161,6 +161,34 @@ public class ServiceProcess {
         }
     }
 
+    public synchronized ServiceDTO addServiceAndActivate(AddServiceRequestDTO addServiceRequest) {
+        ServiceDTO createdService = addServiceOnSubscription(addServiceRequest);
+
+        if (addServiceRequest.getNumber() != null) {
+            UpdateServiceDTO updateDTO = new UpdateServiceDTO();
+            updateDTO.setAction(ServiceUpdateAction.addNumber);
+            updateDTO.setNumber(addServiceRequest.getNumber());
+            String activity = addServiceRequest.getActivityNumber();
+            if (activity == null && addServiceRequest.getServiceActivity() != null) {
+                activity = addServiceRequest.getServiceActivity().name();
+            }
+            updateDTO.setActivityNumber(activity);
+            update(createdService.getServiceId(), updateDTO);
+        }
+
+        Service service = serviceRepository.findById(createdService.getServiceId())
+                .orElseThrow(() -> new SvcNotFoundException(localizedMessageBuilder, SERVICE_NOT_FOUND_ID, createdService.getServiceId()));
+
+        setEventOnService(service, Event.activate);
+        serviceRepository.save(service);
+
+        if (service.getServiceCategory().equals(ACCESS)) {
+            return serviceAccessResourceAssembler.toModel((ServiceAccess) service);
+        } else {
+            return serviceComponentResourceAssembler.toModel((ServiceComponent) service);
+        }
+    }
+
     private void checkBeforeSave(Service service) {
 
         if (service instanceof ServiceAccess) {

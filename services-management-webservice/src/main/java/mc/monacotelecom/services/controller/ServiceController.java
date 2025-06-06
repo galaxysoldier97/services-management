@@ -27,6 +27,7 @@ import org.springframework.data.history.Revision;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -81,6 +82,15 @@ public class ServiceController {
     @PutMapping
     public ServiceDTO addServiceOnSubscription(@Valid @RequestBody AddServiceRequestDTO addServiceRequest) {
         return serviceService.addServiceOnSubscription(addServiceRequest);
+    }
+
+    @Operation(summary = "Create and activate a new service")
+    @ApiResponse(responseCode = "201", description = "Service created and activated")
+    @ApiResponse(responseCode = "500", description = "Internal error")
+    @PutMapping("/createandactivate")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ServiceDTO addServiceAndActivate(@Valid @RequestBody AddServiceRequestDTO addServiceRequest) {
+        return serviceService.addServiceAndActivate(addServiceRequest);
     }
 
     @Operation(summary = "Update an existing service")

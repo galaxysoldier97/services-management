@@ -137,6 +137,14 @@ public class ServicesManagementConnector extends AbstractConnector {
         return exchange(uri, method, requestEntity, type);
     }
 
+    public <T extends ServiceDTO> T addServiceAndActivate(AddServiceRequestDTO addServiceRequestDTO, Class<T> type) {
+        URI uri = this.getUri(PRIVATE_AUTH, "/services/createandactivate");
+        final var method = HttpMethod.PUT;
+        log.info("Add and activate service with DTO {} by {} on URL={}", addServiceRequestDTO, method, uri);
+        HttpEntity<AddServiceRequestDTO> requestEntity = new HttpEntity<>(addServiceRequestDTO, authHeaders());
+        return exchange(uri, method, requestEntity, type);
+    }
+
     public ChangeTagsResponse changeTags(Long serviceId, ChangeTagsDTO changeTagsDTO) {
         URI uri = this.getUri(PRIVATE_AUTH, "/services/", serviceId + "", "/changetags");
         final var method = HttpMethod.PATCH;
