@@ -79,7 +79,7 @@ paths:
     put:
       tags:
         - Service API
-      summary: create and activate service
+      summary: create, associate number and activate service
       operationId: addServiceAndActivate
       consumes:
         - application/json
@@ -2600,6 +2600,10 @@ definitions:
         enum:
           - TRUNKSIP
           - CLOUDCALLING
+      number:
+        type: string
+      activityNumber:
+        type: string
       serviceActivity:
         type: string
         enum:

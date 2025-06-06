@@ -25,6 +25,10 @@ public class AddServiceRequestDTO {
 
     private String componentType;
 
+    private String number;
+
+    private String activityNumber;
+
 
 
 }
