@@ -42,3 +42,21 @@ java -DBASE_LOG_FOLDER=/path/to/my/logs \
 
 Logs will be stored under `/path/to/my/logs/<application name>/`.
 If `BASE_LOG_FOLDER` is not provided, logs default to `mislogs/<application name>/`.
+
+## Example docker-compose snippet
+
+When running the service with Docker Compose you can mount a host folder for the
+logs and pass it to the container through `BASE_LOG_FOLDER`:
+
+```yaml
+services:
+  app:
+    volumes:
+      - ./mislogs:/logs
+    environment:
+      - BASE_LOG_FOLDER=/logs
+```
+
+This example assumes you create a `mislogs` directory next to the
+`docker-compose.yml` file. The application writes its log files inside this
+folder on the host.
