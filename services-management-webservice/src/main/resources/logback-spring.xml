@@ -27,6 +27,10 @@
         <root level="INFO">
             <appender-ref ref="RollingFile" />
         </root>
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="org.apache.coyote" level="INFO"/>
+        <logger name="org.apache.tomcat" level="INFO"/>
+        <logger name="org.apache" level="INFO"/>
 
         <logger name="org.hibernate.SQL" level="${LOG_TO_FILE_SQL_LOG_LEVEL}"/>
         <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="${LOG_TO_FILE_BASIC_BINDER_LOG_LEVEL}"/>
@@ -43,6 +47,10 @@
         <root level="INFO">
             <appender-ref ref="CONSOLE" />
         </root>
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="org.apache.coyote" level="INFO"/>
+        <logger name="org.apache.tomcat" level="INFO"/>
+        <logger name="org.apache" level="INFO"/>
 
         <logger name="org.hibernate.SQL" level="${LOG_TO_FILE_SQL_LOG_LEVEL}"/>
         <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="${LOG_TO_FILE_BASIC_BINDER_LOG_LEVEL}"/>
@@ -158,6 +166,10 @@
         <root level="INFO">
             <appender-ref ref="JSON_CONSOLE_APPENDER"/>
         </root>
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="org.apache.coyote" level="INFO"/>
+        <logger name="org.apache.tomcat" level="INFO"/>
+        <logger name="org.apache" level="INFO"/>
 
         <logger name="org.hibernate.SQL" level="${LOG_TO_FILE_SQL_LOG_LEVEL}"/>
         <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="${LOG_TO_FILE_BASIC_BINDER_LOG_LEVEL}"/>
