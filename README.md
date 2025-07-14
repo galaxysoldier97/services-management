@@ -31,7 +31,8 @@ mvn liquibase:update -Dliquibase.url=jdbc:mariadb://localhost:3306/svcmgmt -Dliq
 
 When starting the service you can enable file logging and choose where the log
 files are written. Activate the `log-to-file` profile and set
-`BASE_LOG_FOLDER` to the desired directory:
+`BASE_LOG_FOLDER` to the desired directory. If this property is not defined the
+application uses `C:\mislogs` as the default location:
 
 ```
 java -DBASE_LOG_FOLDER=/path/to/my/logs \
@@ -39,4 +40,5 @@ java -DBASE_LOG_FOLDER=/path/to/my/logs \
      -jar services-management-webservice.jar
 ```
 
-Logs will be stored under `/path/to/my/logs/&lt;application name&gt;/`.
+Logs will be stored under `/path/to/my/logs/<application name>/`.
+If `BASE_LOG_FOLDER` is not provided, logs default to `C:\mislogs\<application name>\`.

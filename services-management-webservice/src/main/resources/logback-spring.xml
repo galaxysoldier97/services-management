@@ -6,7 +6,7 @@
     <variable name="LOG_TO_FILE_BASIC_BINDER_LOG_LEVEL" value="${BASIC_BINDER_LOG_LEVEL:-INFO}"/>
     <variable name="LOG_TO_FILE_COMMONS_REQUEST_LOGGING_FILTER_LOG_LEVEL" value="${COMMONS_REQUEST_LOGGING_FILTER_LOG_LEVEL:-INFO}"/>
     <variable name="LOG_TO_FILE_LOG_LEVEL" value="${LOG_LEVEL:-INFO}"/>
-    <variable name="LOG_FOLDER" value="${BASE_LOG_FOLDER:-/var/log/services-management}"/>
+    <variable name="LOG_FOLDER" value="${BASE_LOG_FOLDER:-C:/mislogs}"/>
 
     <springProperty name="applicationName" source="spring.application.name" />
 
