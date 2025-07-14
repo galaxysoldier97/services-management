@@ -20,8 +20,16 @@ public class IncomingRequestsLogger {
 
     @Around("execution(* mc.monacotelecom.services.controller..*(..))")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
-        MDC.put("processName", httpRequest.getHeader("processName"));
-        MDC.put("uti", httpRequest.getHeader("uti"));
+        String processName = httpRequest.getHeader("processName");
+        if (processName == null || processName.isBlank()) {
+            processName = "N/A";
+        }
+        String uti = httpRequest.getHeader("uti");
+        if (uti == null || uti.isBlank()) {
+            uti = "N/A";
+        }
+        MDC.put("processName", processName);
+        MDC.put("uti", uti);
         String params = Arrays.deepToString(joinPoint.getArgs());
         log.info("{} {} - start - {}", httpRequest.getMethod(), httpRequest.getRequestURI(), params);
         try {
