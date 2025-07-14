@@ -26,3 +26,17 @@ To run liquibase locally, execute this command from equipments-management-webser
 ```
 mvn liquibase:update -Dliquibase.url=jdbc:mariadb://localhost:3306/svcmgmt -Dliquibase.changeLogFile=db/changelog/db.changelog-master.xml -Dliquibase.password=rootpwd -Dliquibase.username=root
 ```
+
+## Logging to a custom folder
+
+When starting the service you can enable file logging and choose where the log
+files are written. Activate the `log-to-file` profile and set
+`BASE_LOG_FOLDER` to the desired directory:
+
+```
+java -DBASE_LOG_FOLDER=/path/to/my/logs \
+     -Dspring.profiles.active=log-to-file \
+     -jar services-management-webservice.jar
+```
+
+Logs will be stored under `/path/to/my/logs/&lt;application name&gt;/`.
