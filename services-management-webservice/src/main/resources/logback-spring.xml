@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+
+    <variable name="LOG_TO_FILE_SQL_LOG_LEVEL" value="${SQL_LOG_LEVEL:-INFO}"/>
+    <variable name="LOG_TO_FILE_BASIC_BINDER_LOG_LEVEL" value="${BASIC_BINDER_LOG_LEVEL:-INFO}"/>
+    <variable name="LOG_TO_FILE_COMMONS_REQUEST_LOGGING_FILTER_LOG_LEVEL" value="${COMMONS_REQUEST_LOGGING_FILTER_LOG_LEVEL:-INFO}"/>
+    <variable name="LOG_TO_FILE_LOG_LEVEL" value="${LOG_LEVEL:-INFO}"/>
+    <variable name="LOG_FOLDER" value="${BASE_LOG_FOLDER:-mislogs}"/>
+
+    <springProperty name="applicationName" source="spring.application.name" />
+
+    <springProfile name="log-to-file">
+        <appender name="RollingFile"
+                  class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_FOLDER}/${applicationName}/${applicationName}.log</file>
+            <encoder
+                    class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <Pattern>[%d{yyyy-MM-dd HH:mm:ss}] %X{processName}.%level: processName: %X{processName}, uti: %X{uti}, parameters: %msg%n</Pattern>
+            </encoder>
+
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_FOLDER}/archived/${applicationName}-%d{yyyy-MM-dd}.log</fileNamePattern>
+            </rollingPolicy>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="RollingFile" />
+        </root>
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="org.apache.coyote" level="INFO"/>
+        <logger name="org.apache.tomcat" level="INFO"/>
+        <logger name="org.apache" level="INFO"/>
+
+        <logger name="org.hibernate.SQL" level="${LOG_TO_FILE_SQL_LOG_LEVEL}"/>
+        <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="${LOG_TO_FILE_BASIC_BINDER_LOG_LEVEL}"/>
+        <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="${LOG_TO_FILE_COMMONS_REQUEST_LOGGING_FILTER_LOG_LEVEL}"/>
+        <logger name="fr.itsf" level="${LOG_TO_FILE_LOG_LEVEL}"/>
+        <logger name="fr.njj" level="${LOG_TO_FILE_LOG_LEVEL}"/>
+        <logger name="ie.eir" level="${LOG_TO_FILE_LOG_LEVEL}"/>
+        <logger name="mc.monacotelecom" level="${LOG_TO_FILE_LOG_LEVEL}"/>
+    </springProfile>
+
+    <springProfile name="!output-logs-as-json">
+        <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+        </root>
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="org.apache.coyote" level="INFO"/>
+        <logger name="org.apache.tomcat" level="INFO"/>
+        <logger name="org.apache" level="INFO"/>
+
+        <logger name="org.hibernate.SQL" level="${LOG_TO_FILE_SQL_LOG_LEVEL}"/>
+        <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="${LOG_TO_FILE_BASIC_BINDER_LOG_LEVEL}"/>
+        <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="${LOG_TO_FILE_COMMONS_REQUEST_LOGGING_FILTER_LOG_LEVEL}"/>
+        <logger name="fr.itsf" level="${LOG_TO_FILE_LOG_LEVEL}"/>
+        <logger name="fr.njj" level="${LOG_TO_FILE_LOG_LEVEL}"/>
+        <logger name="ie.eir" level="${LOG_TO_FILE_LOG_LEVEL}"/>
+        <logger name="mc.monacotelecom" level="${LOG_TO_FILE_LOG_LEVEL}"/>
+    </springProfile>
+
+    <springProfile name="output-logs-as-json">
+        <springProperty scope="context" name="SPRING_APPLICATION_NAME" source="spring.application.name"/>
+        <springProperty scope="context" name="MAVEN_PROJECT_VERSION" source="maven.project.version"/>
+        <springProperty scope="context" name="GIT_COMMIT_ID" source="git.commit.id"/>
+
+        <appender name="JSON_CONSOLE_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+                <providers>
+                    <!-- Timestamp - Essential field -->
+                    <timestamp/>
+                    <!-- MDC (Mapped Diagnostic Context)
+                    Usage:
+                            MDC.put("my_mdc_key", "my_mdc_value");
+                    -->
+                    <nestedField>
+                        <fieldName>mdc</fieldName>
+                        <providers>
+                            <mdc>
+                                <!-- Following MDC are added in the Pattern section, hence excluded here. -->
+                                <excludeMdcKeyName>X-B3-TraceId</excludeMdcKeyName>
+                                <excludeMdcKeyName>X-B3-SpanId</excludeMdcKeyName>
+                                <excludeMdcKeyName>X-B3-ParentSpanId</excludeMdcKeyName>
+                                <excludeMdcKeyName>X-Span-Export</excludeMdcKeyName>
+                                <excludeMdcKeyName>traceId</excludeMdcKeyName>
+                                <excludeMdcKeyName>spanId</excludeMdcKeyName>
+                                <excludeMdcKeyName>parentId</excludeMdcKeyName>
+                                <excludeMdcKeyName>spanExportable</excludeMdcKeyName>
+                                <excludeMdcKeyName>req.requestURI</excludeMdcKeyName>
+                                <excludeMdcKeyName>req.queryString</excludeMdcKeyName>
+                                <excludeMdcKeyName>req.method</excludeMdcKeyName>
+                                <excludeMdcKeyName>req.userAgent</excludeMdcKeyName>
+                                <excludeMdcKeyName>req.remoteHost</excludeMdcKeyName>
+                                <excludeMdcKeyName>req.requestURL</excludeMdcKeyName>
+                            </mdc>
+                        </providers>
+                    </nestedField>
+
+                    <!-- Markers
+                    Usage:
+                            LOGGER.info(append("myMarkerKey", "myMarkerValue"), "my log message");
+                    -->
+                    <nestedField>
+                        <fieldName>markers</fieldName>
+                        <providers>
+                            <logstashMarkers/>
+                        </providers>
+                    </nestedField>
+
+                    <!-- Tags
+                    Usage:
+                            LOGGER.info(MarkerFactory.getMarker("my_tag_name"), "my log message");
+                    -->
+                    <tags/>
+
+                    <!-- Log - Standard log fields -->
+                    <nestedField>
+                        <fieldName>logitem</fieldName>
+                        <providers>
+                            <loggerName/>
+                            <threadName/>
+                            <logLevel/>
+                            <logLevelValue/>
+                            <message/>
+                            <stackTrace>
+                                <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                                    <maxLength>8000</maxLength>
+                                </throwableConverter>
+                            </stackTrace>
+                        </providers>
+                    </nestedField>
+
+                    <!-- provides the fields in the configured pattern -->
+                    <pattern>
+                        <!-- the pattern that defines what to include -->
+                        <pattern>
+                            {
+                                "project": {
+                                    "name": "${SPRING_APPLICATION_NAME:-}",
+                                    "version": "${MAVEN_PROJECT_VERSION:-}",
+                                    "git_hash": "${GIT_COMMIT_ID:-}"
+                                },
+                                "tracing": {
+                                    "trace_id": "%X{traceId:-}",
+                                    "span_id": "%X{spanId:-}",
+                                    "parent_span_id": "%X{X-B3-ParentSpanId:-}",
+                                    "exportable": "%X{X-Span-Export:-}"
+                                },
+                                "request": {
+                                    "method": "%X{req.method:-}",
+                                    "request_uri": "%X{req.requestURI:-}",
+                                    "request_url": "%X{req.requestURL:-}",
+                                    "remote_host": "%X{req.remoteHost:-}",
+                                    "user_agent": "%X{req.userAgent:-}",
+                                    "query_string": "%X{req.queryString:-}"
+                                }
+                            }
+                        </pattern>
+                    </pattern>
+                </providers>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="JSON_CONSOLE_APPENDER"/>
+        </root>
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="org.apache.coyote" level="INFO"/>
+        <logger name="org.apache.tomcat" level="INFO"/>
+        <logger name="org.apache" level="INFO"/>
+
+        <logger name="org.hibernate.SQL" level="${LOG_TO_FILE_SQL_LOG_LEVEL}"/>
+        <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="${LOG_TO_FILE_BASIC_BINDER_LOG_LEVEL}"/>
+        <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="${LOG_TO_FILE_COMMONS_REQUEST_LOGGING_FILTER_LOG_LEVEL}"/>
+        <logger name="fr.itsf" level="${LOG_TO_FILE_LOG_LEVEL}"/>
+        <logger name="fr.njj" level="${LOG_TO_FILE_LOG_LEVEL}"/>
+        <logger name="ie.eir" level="${LOG_TO_FILE_LOG_LEVEL}"/>
+        <logger name="mc.monacotelecom" level="${LOG_TO_FILE_LOG_LEVEL}"/>
+    </springProfile>
+
+</configuration>

@@ -26,3 +26,37 @@ To run liquibase locally, execute this command from equipments-management-webser
 ```
 mvn liquibase:update -Dliquibase.url=jdbc:mariadb://localhost:3306/svcmgmt -Dliquibase.changeLogFile=db/changelog/db.changelog-master.xml -Dliquibase.password=rootpwd -Dliquibase.username=root
 ```
+
+## Logging to a custom folder
+
+When starting the service you can enable file logging and choose where the log
+files are written. Activate the `log-to-file` profile and set
+`BASE_LOG_FOLDER` to the desired directory. If this property is not defined the
+application uses a folder named `mislogs` under the current working directory:
+
+```
+java -DBASE_LOG_FOLDER=/path/to/my/logs \
+     -Dspring.profiles.active=log-to-file \
+     -jar services-management-webservice.jar
+```
+
+Logs will be stored under `/path/to/my/logs/<application name>/`.
+If `BASE_LOG_FOLDER` is not provided, logs default to `mislogs/<application name>/`.
+
+## Example docker-compose snippet
+
+When running the service with Docker Compose you can mount a host folder for the
+logs and pass it to the container through `BASE_LOG_FOLDER`:
+
+```yaml
+services:
+  app:
+    volumes:
+      - ./mislogs:/logs
+    environment:
+      - BASE_LOG_FOLDER=/logs
+```
+
+This example assumes you create a `mislogs` directory next to the
+`docker-compose.yml` file. The application writes its log files inside this
+folder on the host.
